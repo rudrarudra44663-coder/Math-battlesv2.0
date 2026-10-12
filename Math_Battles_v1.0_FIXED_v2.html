@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Battles — Math Universe</title>
+<style>
+:root{--bg:#090b20;--panel:#151a3a;--panel2:#1e2450;--cyan:#5ff3ff;--purple:#b48cff;--pink:#ff6ec7;--gold:#ffd76a;--text:#f5f6ff;--muted:#b9c0e8;--good:#75f0a7;--bad:#ff738b}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(ellipse at 20% 0%,#24235e 0%,transparent 45%),radial-gradient(ellipse at 90% 30%,#341c57 0%,transparent 38%),var(--bg);overflow-x:hidden}
+.stars{position:fixed;inset:0;pointer-events:none;opacity:.55;background-image:radial-gradient(2px 2px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 80px,#9efaff,transparent),radial-gradient(2px 2px at 160px 130px,#fff,transparent),radial-gradient(1px 1px at 230px 40px,#d9b8ff,transparent);background-size:280px 180px;z-index:-1}
+.wrap{width:min(920px,94vw);margin:0 auto;padding:24px 0 44px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.logo{font-size:clamp(1.2rem,3vw,1.7rem);font-weight:900;letter-spacing:.02em}.logo span{color:var(--cyan)}.pill{border:1px solid #474b85;border-radius:999px;padding:7px 12px;color:var(--muted);font-size:.83rem}
+.hero{text-align:center;padding:25px 0 20px}.eyebrow{color:var(--cyan);font-weight:800;text-transform:uppercase;letter-spacing:.18em;font-size:.76rem}.hero h1{font-size:clamp(2.1rem,7vw,4rem);line-height:1.02;margin:9px 0 12px}.hero h1 em{font-style:normal;color:var(--purple)}.hero p{max-width:620px;margin:0 auto;color:var(--muted);line-height:1.6}
+.card{background:linear-gradient(145deg,rgba(27,33,75,.95),rgba(15,18,47,.96));border:1px solid #363d78;border-radius:22px;padding:clamp(16px,3.5vw,28px);box-shadow:0 16px 55px #0004}
+.boss-row{display:grid;grid-template-columns:1fr 1.3fr;gap:18px;align-items:stretch}.boss-art{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,#3a2d82 0%,#171b46 55%,transparent 75%);border-radius:16px;text-align:center}.boss-art{position:relative;overflow:hidden;border:1px solid #47458b;box-shadow:inset 0 0 45px #8e67ff22}.boss-aura{position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#b48cff55,transparent 68%);animation:aura 3s ease-in-out infinite;pointer-events:none}.boss-icon{position:relative;z-index:1;font-size:clamp(4rem,12vw,6.5rem);filter:drop-shadow(0 0 18px #b48cff);animation:float 3s ease-in-out infinite;transform-origin:center}.boss-icon.hit{animation:bossHit .42s ease}.boss-icon.victory{animation:victory .7s ease}.boss-art::after{content:"✦  ✧  ·  ✦  ·  ✧";position:absolute;bottom:14px;color:#d8caff88;letter-spacing:.8em;animation:twinkle 2s ease-in-out infinite}@keyframes float{50%{transform:translateY(-10px) rotate(4deg) scale(1.04)}}@keyframes aura{50%{transform:scale(1.25);opacity:.55}}@keyframes bossHit{0%{transform:translateX(0) scale(1)}25%{transform:translateX(-12px) rotate(-8deg);filter:brightness(2)}50%{transform:translateX(10px) rotate(8deg)}100%{transform:translateX(0) scale(1)}}@keyframes victory{50%{transform:scale(1.3) rotate(12deg);filter:brightness(1.8)}}@keyframes twinkle{50%{opacity:.35}}.card{backdrop-filter:blur(8px);box-shadow:0 18px 60px #0005,0 0 0 1px #a38cff0b}.btn{box-shadow:0 5px 18px #0002}.primary{box-shadow:0 0 22px #5ff3ff26}.hit-flash{animation:flash .3s ease}@keyframes flash{50%{box-shadow:0 0 35px #75f0a766}}.confetti{position:fixed;z-index:20;pointer-events:none;font-size:22px;animation:confettiFall 1.1s ease-out forwards}@keyframes confettiFall{to{transform:translate(var(--dx),100vh) rotate(620deg);opacity:0}}.boss-name{font-weight:900;font-size:1.15rem;margin-top:4px}.boss-sub{font-size:.82rem;color:var(--muted)}.stats{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}.stat strong{color:white}.bar{height:12px;background:#090d29;border:1px solid #444a83;border-radius:99px;overflow:hidden;margin-top:8px}.fill{height:100%;width:100%;background:linear-gradient(90deg,var(--pink),var(--purple));transition:width .35s}.playerfill{background:linear-gradient(90deg,var(--cyan),#78ffa7)}
+.question-card{margin-top:18px}.question-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.tag{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);font-weight:800}.question{font-size:clamp(1.2rem,3.8vw,1.75rem);font-weight:800;line-height:1.45;margin:20px 0;white-space:pre-line}.hint{color:var(--muted);font-size:.9rem;min-height:1.4em}.answer-row{display:flex;gap:10px;margin-top:14px}.answer-row input{flex:1;min-width:0;background:#080c25;color:white;border:1px solid #4b528b;border-radius:12px;padding:14px 15px;font:inherit;font-size:1.05rem;outline:none}.answer-row input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #5ff3ff22}.btn{border:0;border-radius:12px;padding:12px 17px;font:inherit;font-weight:850;cursor:pointer;transition:transform .12s,filter .12s}.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.btn:active{transform:translateY(1px)}.primary{background:linear-gradient(100deg,var(--cyan),#9bffda);color:#071226}.secondary{background:#2c3269;color:white;border:1px solid #555d9c}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.feedback{min-height:30px;margin-top:13px;font-weight:750}.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}.footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.small-title{font-weight:900;margin-bottom:10px}.muted{color:var(--muted);font-size:.9rem;line-height:1.55}.rule{display:flex;gap:10px;margin:8px 0;align-items:flex-start}.dot{color:var(--cyan);font-weight:900}.hide{display:none!important}.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.shop-list{display:grid;gap:10px}.shop-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;background:#0b1030;border:1px solid #3d447d;border-radius:13px}.shop-item small{display:block;color:var(--muted);margin-top:3px}.shop-item button{white-space:nowrap}.skin-preview{font-size:1.7rem;margin-right:7px}.mini-list{padding-left:20px;color:var(--muted);line-height:1.8}.notice{border:1px solid #5d4a91;background:#211843;border-radius:12px;padding:11px;color:#ded5ff;font-size:.86rem;line-height:1.5}.boss-art.special{animation:bossSpecial .5s ease}@keyframes bossSpecial{20%{filter:hue-rotate(70deg) brightness(1.5);transform:translateX(-5px)}60%{filter:hue-rotate(-50deg);transform:translateX(5px)}100%{filter:none;transform:none}}@media(max-width:650px){.feature-grid{grid-template-columns:1fr}}.overlay{position:fixed;inset:0;background:#060817dd;display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}.modal{width:min(520px,100%);text-align:center}.modal h2{font-size:2rem;margin:5px}.modal p{color:var(--muted);line-height:1.6}.modal .btn{margin:6px}.toast{font-size:.83rem;color:var(--muted);margin-top:12px}
+@media(max-width:650px){.boss-row,.footer-grid{grid-template-columns:1fr}.boss-art{min-height:155px}.answer-row{flex-direction:column}.answer-row .btn{width:100%}.wrap{padding-top:16px}}
+</style>
+
+<style>
+.ability{font-weight:750;background:linear-gradient(100deg,#211843,#111832);border-color:#6c5cb6;color:#f0e8ff}
+.shop-info{display:flex;align-items:center;min-width:0;gap:8px}.skin-meta{display:flex;flex-direction:column;min-width:0}.skin-meta strong{line-height:1.3}.shop-item small{line-height:1.35}.name-row{padding:12px;background:#0b1030;border:1px solid #3d447d;border-radius:13px}.name-row label,.config-label{display:block;font-size:.84rem;font-weight:750;color:#d9defe;margin-bottom:6px}.inline-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}.inline-controls input,.config-input{min-width:0;width:100%;background:#080c25;color:white;border:1px solid #4b528b;border-radius:10px;padding:10px 12px;font:inherit;outline:none}.name-row .inline-controls input{flex:1}.board-heading{font-weight:850;margin:14px 0 6px;color:#cbd2ff}.global-settings{border-top:1px solid #383f79;margin-top:15px;padding-top:13px}.global-settings summary{cursor:pointer;font-weight:850;color:var(--cyan);padding:5px 0}.global-settings p{margin:10px 0}.config-input{margin-bottom:10px}.sql-input{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.78rem;line-height:1.5;white-space:pre;resize:vertical}.leaderboard-card .mini-list{margin-top:6px}.leaderboard-card .mini-list li{padding:2px 0;overflow-wrap:anywhere}.save-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.save-actions .btn{font-size:.82rem;padding:10px 13px}.save-actions .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.verified-badge{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:19px;height:19px;border-radius:50%;background:#168cff;color:#fff;font-size:13px;font-weight:1000;line-height:1;box-shadow:0 0 0 2px #168cff22,0 0 12px #168cff66;vertical-align:middle}.verified-profile{display:inline-flex;align-items:center;gap:7px}.profile-tag-pill{display:flex;align-items:center;gap:7px;max-width:100%;overflow-wrap:anywhere}.profile-tag-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:650px){.config-grid{grid-template-columns:1fr}.inline-controls>*{max-width:100%}.name-row .inline-controls{align-items:stretch}.name-row .inline-controls input{width:100%;flex-basis:100%}.leaderboard-card .btn{font-size:.82rem;padding:10px 12px}}
+</style>
+
+
+<style>
+.multiplayer-card{margin-top:18px}.mp-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}.mp-step{background:#0b1030;border:1px solid #3d447d;border-radius:12px;padding:10px;font-size:.82rem;color:var(--muted);line-height:1.45}.mp-step strong{display:block;color:#eef0ff;margin-bottom:3px}.mp-controls{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.mp-controls .btn{flex:1 1 160px}.mp-room-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;margin-top:12px}.mp-input{min-width:0;width:100%;background:#080c25;color:white;border:1px solid #4b528b;border-radius:10px;padding:12px;font:inherit;text-transform:uppercase}.mp-online{color:var(--good);font-weight:800}.mp-game{margin-top:16px;padding:16px;border:1px solid #535c9c;border-radius:16px;background:linear-gradient(140deg,#111735,#0a102b)}.mp-scoreboard{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.mp-score{padding:12px;background:#080c25;border:1px solid #343c79;border-radius:12px}.mp-score strong{display:block;font-size:1.5rem;color:var(--cyan)}.mp-question{font-size:clamp(1.1rem,3.5vw,1.55rem);font-weight:850;line-height:1.45;margin:15px 0;white-space:pre-line}.mp-status-line{font-size:.86rem;line-height:1.5;color:var(--muted);margin-top:10px;overflow-wrap:anywhere}.mp-pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#272052;border:1px solid #6656a3;font-size:.78rem;color:#e0d6ff}.mp-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mp-actions .btn{flex:1 1 130px}.mp-caution{font-size:.82rem;line-height:1.5;color:var(--muted);margin-top:12px}.mp-question{user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-webkit-touch-callout:none;cursor:default;touch-action:pan-y}.mp-timer-track{height:9px;background:#070c22;border:1px solid #3d477e;border-radius:999px;overflow:hidden;margin:10px 0 14px}.mp-timer-fill{height:100%;width:100%;background:linear-gradient(90deg,#5ff3ff,#8cffbd);transition:width .2s linear,background .2s}.mp-timer-fill.urgent{background:linear-gradient(90deg,#ffcf65,#ff647f)}.mp-pill.mp-urgent{border-color:#ff647f;color:#ffdbe0;animation:timerPulse .8s ease-in-out infinite alternate}@keyframes timerPulse{to{box-shadow:0 0 15px #ff647f55}}
+@media(max-width:650px){.mp-steps{grid-template-columns:1fr}.mp-room-row{grid-template-columns:1fr}.mp-scoreboard{grid-template-columns:1fr 1fr}}
+</style>
+
+
+<style>
+.ranked-card{margin-top:18px;border-color:#5965b6;box-shadow:0 0 0 1px #5ff3ff12,0 18px 60px #0006}.ranked-title{display:flex;align-items:center;gap:9px;font-weight:950;font-size:1.15rem}.ranked-mark{display:inline-flex;align-items:center;gap:6px;border:1px solid #4c9eff;background:#102d58;border-radius:999px;color:#b7e1ff;font-size:.72rem;padding:5px 9px;font-weight:850}.ranked-question{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.ranked-score strong{color:#8dffcc}.ranked-meta{font-size:.8rem;color:var(--muted);line-height:1.5}.ranked-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}.ranked-actions .btn{flex:1 1 160px}.ranked-status-good{color:var(--good);font-weight:800}.ranked-leaderboard{padding-left:22px;color:var(--muted);line-height:1.75}.ranked-leaderboard li{padding:2px 0;overflow-wrap:anywhere}.ranked-clock{font-variant-numeric:tabular-nums}.ranked-server-note{margin-top:12px;font-size:.83rem;line-height:1.55;color:var(--muted)}
+</style>
+
+</head>
+<body><div class="stars"></div><main class="wrap">
+<header class="top"><div class="logo">✦ MATH <span>UNIVERSE</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><div class="pill">⚡ EXTREME MODE · v1.0</div><div class="pill profile-tag-pill" id="profileTagPill" title="Your custom blue-check profile"><span class="profile-tag-name" id="profileTagName">StarPilot</span><span class="verified-badge" aria-label="Blue checkmark" title="Your custom blue-check badge">✔</span></div><div class="pill" id="coinPill">🪙 0 coins</div><div class="pill" id="skinPill">🎭 👾 Cosmic Classic</div><button class="btn secondary" id="soundBtn" type="button" aria-pressed="true">🔊 SOUND ON</button><div class="pill" id="saveStatus">💾 Autosave ready</div></div></header>
+<section class="hero"><div class="eyebrow">A cosmic math boss rush</div><h1>Math Boss <em>Battles</em></h1><p>Crack the problem. Damage the boss. Save the universe. Every correct answer is a hit—every mistake gives the boss a chance to strike back.</p></section>
+<section class="card boss-row">
+ <div class="boss-art" id="bossArt"><div class="boss-aura"></div><div class="boss-icon" id="bossIcon">👾</div><div class="boss-name" id="bossName">The Algebra Hydra</div><div class="boss-sub" id="bossDesc">Guardian of the Unknown</div></div>
+ <div><div class="stats"><span class="stat">BOSS HP <strong id="bossHPText">100 / 100</strong></span><span id="bossNum">BOSS 1 / 10</span></div><div class="bar"><div class="fill" id="bossHP"></div></div><div style="height:22px"></div><div class="stats"><span class="stat">YOUR SHIELDS <strong id="playerHPText">3 / 3</strong></span><span class="stat">STREAK <strong id="streak">0</strong> 🔥</span></div><div class="bar"><div class="fill playerfill" id="playerHP"></div></div><div style="height:18px"></div><div class="stats"><span class="stat">SCORE <strong id="score">0</strong></span><span class="stat">ACCURACY <strong id="accuracy">—</strong></span></div><div class="notice ability" id="bossAbility" style="margin-top:16px">⚡ SPECIAL ATTACK: Twin-claw strike — steals 15 points on a mistake.</div><p class="muted" style="margin-top:12px">Bosses get tougher as you advance. You have 3 shields for the whole run, so show your working if you need to!</p></div>
+</section>
+<section class="card question-card">
+ <div class="question-head"><span class="tag" id="topic">ALGEBRA · EXTREME</span><span class="pill" id="round">Challenge 1</span></div>
+ <div class="question" id="question">Loading challenge…</div>
+ <div class="hint" id="hint">Enter a number or simplified expression as requested.</div>
+ <form id="answerForm" class="answer-row"><input id="answer" autocomplete="off" placeholder="Type your answer…" aria-label="Your answer"><button class="btn primary" id="attack" type="submit">ATTACK ⚡</button></form>
+ <div id="feedback" class="feedback" aria-live="polite"></div>
+ <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn secondary" id="hintBtn" type="button">Use a hint (−50 points)</button><button class="btn secondary" id="skipBtn" type="button">Retreat (−1 shield)</button></div>
+ <div class="toast" id="hintText">Hints are tactical intel. Use them wisely.</div><div class="save-actions" aria-label="Save game controls"><button class="btn secondary" id="saveNowBtn" type="button">💾 SAVE NOW</button><button class="btn secondary" id="exportSaveBtn" type="button">⬇️ BACK UP SAVE</button><button class="btn secondary" id="importSaveBtn" type="button">⬆️ RESTORE SAVE</button><input id="importSaveFile" type="file" accept=".json,application/json" hidden></div><div class="toast" id="saveNote">Autosaves after every move and while you type. Back up your save to move it to another device.</div>
+</section>
+
+<section class="card multiplayer-card" id="multiplayerCard">
+ <div class="small-title">🎮 Casual Multiplayer Arena — unranked</div>
+ <p class="muted">Race a random challenger online or invite a friend with a room code. This older Realtime mode is for casual play only; the browser-hosted game state is not safe for competitive rankings. Use the Server-Verified Ranked Arena below for server-scored matches.</p>
+ <div class="notice" id="mpStatus">Online play needs a published game page and a Supabase project with Realtime enabled. Connect using your project URL and public publishable/anon key in the leaderboard setup below.</div>
+ <div class="mp-steps"><div class="mp-step"><strong>1 · Connect</strong>Open online setup below and connect your Supabase project.</div><div class="mp-step"><strong>2 · Match</strong>Find a random challenger or create a friend room.</div><div class="mp-step"><strong>3 · Battle</strong>Race through 8 shared math rounds and compare scores.</div></div>
+ <div class="mp-controls"><button class="btn primary" id="connectPlayBtn" type="button">🌐 CONNECT ONLINE PLAY</button><button class="btn secondary" id="randomMatchBtn" type="button" disabled>🎲 FIND RANDOM PLAYER</button><button class="btn secondary" id="cancelSearchBtn" type="button" disabled>CANCEL SEARCH</button></div>
+ <div class="mp-room-row"><button class="btn secondary" id="createRoomBtn" type="button" disabled>➕ CREATE FRIEND ROOM</button><div style="display:flex;gap:8px;min-width:0"><input class="mp-input" id="friendRoomCode" maxlength="8" placeholder="ROOM CODE" aria-label="Friend room code" inputmode="text"><button class="btn secondary" id="joinRoomBtn" type="button" disabled>JOIN</button></div></div>
+ <div class="mp-actions"><button class="btn secondary" id="copyInviteBtn" type="button" disabled>🔗 COPY INVITE</button><button class="btn secondary" id="leaveRoomBtn" type="button" disabled>🚪 LEAVE ROOM</button></div>
+ <div class="mp-status-line" id="mpPlayersText">Players: not connected</div>
+ <div class="mp-game hide" id="mpGamePanel">
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><span class="mp-pill" id="mpRoundPill">ROUND 0 / 8</span><span class="mp-pill" id="mpClockPill" role="timer" aria-live="off">⏱️ 50s LEFT</span></div>
+  <div class="mp-timer-track" aria-label="Round timer"><div class="mp-timer-fill" id="mpTimerFill"></div></div>
+  <div class="mp-scoreboard"><div class="mp-score"><span class="muted" id="mpYouName">YOU</span><strong id="mpYouScore">0</strong><span class="muted">points</span></div><div class="mp-score"><span class="muted" id="mpThemName">CHALLENGER</span><strong id="mpThemScore">0</strong><span class="muted">points</span></div></div>
+  <div class="tag" id="mpTopic">MIXED EXTREME</div><div class="mp-question" id="mpQuestion">Waiting for the other challenger…</div>
+  <form class="answer-row" id="mpAnswerForm"><input id="mpAnswer" autocomplete="off" placeholder="Your answer…" aria-label="Multiplayer answer" disabled><button class="btn primary" id="mpAttackBtn" type="submit" disabled>SUBMIT ⚡</button></form>
+  <div class="feedback" id="mpFeedback" aria-live="polite"></div><div class="mp-status-line" id="mpRoundStatus">The duel will begin when both players are connected.</div>
+ </div>
+ <p class="mp-caution">Casual mode uses browser-hosted match state. Use a gamer tag, not your real name. For ranked matches, the server-verified arena below independently checks answers, deadlines and scores. The game must be hosted at a URL both people can open.</p>
+</section>
+
+
+<section class="card ranked-card" id="rankedArenaCard">
+ <div class="ranked-title">🏆 Server-Verified Ranked Arena <span class="ranked-mark"><span aria-hidden="true">🔐</span> SERVER SCORED</span></div>
+ <p class="muted">Ranked matches are decided by your Supabase server—not by either player's browser. The answer key stays private, the database clock controls each 50-second round, and scores are written inside locked database transactions.</p>
+ <div class="notice" id="rankedStatus">Connect your Supabase project, then deploy the ranked SQL migration and Edge Function from the accompanying backend bundle. Until deployed, online ranked play is not active.</div>
+ <div class="mp-controls">
+  <button class="btn primary" id="rankedConnectBtn" type="button">🔐 CONNECT RANKED SERVER</button>
+  <button class="btn secondary" id="rankedFindBtn" type="button" disabled>🎲 FIND RANKED MATCH</button>
+  <button class="btn secondary" id="rankedStopBtn" type="button" disabled>CANCEL QUEUE / LEAVE</button>
+ </div>
+ <div class="mp-room-row"><button class="btn secondary" id="rankedCreateRoomBtn" type="button" disabled>➕ CREATE RANKED ROOM</button><div style="display:flex;gap:8px;min-width:0"><input class="mp-input" id="rankedRoomCode" maxlength="6" placeholder="6-CHAR CODE" aria-label="Ranked friend room code" inputmode="text"><button class="btn secondary" id="rankedJoinRoomBtn" type="button" disabled>JOIN</button></div></div>
+ <div class="ranked-actions"><button class="btn secondary" id="rankedCopyInviteBtn" type="button" disabled>🔗 COPY ROOM INVITE</button><button class="btn secondary" id="rankedForfeitBtn" type="button" disabled>🚪 LEAVE / FORFEIT</button></div>
+ <div class="mp-game hide" id="rankedMatchPanel">
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><span class="mp-pill" id="rankedRoundPill">ROUND 0 / 8</span><span class="mp-pill ranked-clock" id="rankedClockPill" role="timer" aria-live="off">WAITING</span></div>
+  <div class="mp-timer-track" aria-label="Server-timed ranked round"><div class="mp-timer-fill" id="rankedTimerFill"></div></div>
+  <div class="mp-scoreboard"><div class="mp-score ranked-score"><span class="muted" id="rankedYouName">YOU</span><strong id="rankedYouScore">0</strong><span class="muted">server points</span></div><div class="mp-score ranked-score"><span class="muted" id="rankedThemName">CHALLENGER</span><strong id="rankedThemScore">0</strong><span class="muted">server points</span></div></div>
+  <div class="tag" id="rankedTopic">WAITING</div><div class="mp-question ranked-question" id="rankedQuestion">Waiting for another player…</div>
+  <form class="answer-row" id="rankedAnswerForm"><input id="rankedAnswer" autocomplete="off" inputmode="numeric" placeholder="Type your whole-number answer…" aria-label="Ranked answer" disabled><button class="btn primary" id="rankedSubmitBtn" type="submit" disabled>SUBMIT ⚡</button></form>
+  <div class="feedback" id="rankedFeedback" aria-live="polite"></div><div class="mp-status-line" id="rankedRoundStatus">The server will generate a question when both players have joined.</div>
+ </div>
+ <div class="board-heading">🥇 Server-ranked leaderboard</div><ol class="ranked-leaderboard" id="rankedLeaderboard"><li>Connect to load scores from completed ranked matches.</li></ol>
+ <details style="margin-top:14px"><summary style="cursor:pointer;color:var(--cyan);font-weight:850">Setup checklist for the ranked server</summary>
+  <ol class="mini-list">
+   <li>In Supabase Auth settings, enable Anonymous Sign-Ins.</li>
+   <li>Run the SQL migration from <code>math_boss_ranked_backend/supabase/migrations/</code>.</li>
+   <li>Deploy the <code>ranked-match</code> Edge Function from the included backend bundle.</li>
+   <li>In the existing “Connect a shared online leaderboard” settings below, enter your project URL and public publishable/anon key, then connect here.</li>
+   <li>Publish this HTML on an HTTPS website and test with two different browser profiles/devices.</li>
+  </ol>
+  <p class="ranked-server-note">Never put a Supabase service-role/secret key in this page. It belongs only in server-side function secrets. Anonymous guest identity is stored by the browser; clearing browser data can lose the guest identity. The online server isn't deployed automatically by this HTML file.</p>
+ </details>
+ <p class="ranked-server-note">Protection boundary: the server controls prompts, answer keys, timers, scoring and match results. It makes direct browser score edits ineffective. It cannot prevent screenshots, players sharing answers, outside calculators, multiple accounts, or every form of network abuse.</p>
+</section>
+
+<section class="feature-grid">
+ <div class="card"><div class="small-title">🛍️ Cosmic Skin Shop</div><p class="muted">Earn coins by solving problems and defeating bosses. Buy a look, then equip it!</p><div class="shop-list" id="shopList"></div></div>
+ <div class="card leaderboard-card"><div class="small-title">🏆 Leaderboards</div><p class="muted">Your personal best runs and an optional shared online leaderboard.</p>
+  <div class="name-row"><label for="playerName">Gamer tag (no real name needed)</label><div class="inline-controls"><input id="playerName" maxlength="18" value="StarPilot" placeholder="StarPilot"><span class="verified-badge" aria-label="Blue checkmark badge" title="Your custom blue-check badge">✔</span><button class="btn secondary" id="saveNameBtn" type="button">SAVE TAG</button></div><div class="toast" id="nameStatus">Scores use this gamer tag.</div></div>
+  <div class="board-heading">📱 Local top runs</div><ol class="mini-list" id="leaderboardList"><li>No completed runs yet.</li></ol><button class="btn secondary" id="clearScoresBtn" type="button" style="margin-top:10px">Clear local leaderboard</button>
+  <div class="board-heading" style="margin-top:18px">🌐 Global leaderboard</div><div class="notice" id="globalStatus">Not connected. Open setup below to connect a shared online board.</div><ol class="mini-list" id="globalLeaderboardList"><li>Connect a shared database to load global scores.</li></ol><div class="inline-controls"><button class="btn secondary" id="refreshGlobalBtn" type="button">REFRESH ONLINE SCORES</button><button class="btn secondary" id="disconnectGlobalBtn" type="button">DISCONNECT</button></div>
+  <details class="global-settings"><summary>Connect a shared online leaderboard</summary><p class="muted">This optional feature uses your own Supabase database. Never paste a service-role or secret key here—use only the project's public publishable/anon key. The key is stored locally in this browser.</p><label class="config-label" for="supabaseUrl">Supabase project URL</label><input class="config-input" id="supabaseUrl" type="url" placeholder="https://your-project.supabase.co" autocomplete="off"><label class="config-label" for="supabaseKey">Public publishable / anon key</label><input class="config-input" id="supabaseKey" type="password" placeholder="Paste public anon key" autocomplete="off"><button class="btn primary" id="connectGlobalBtn" type="button" style="margin-top:10px">CONNECT GLOBAL BOARD</button><div class="board-heading">One-time database setup</div><p class="muted">Create a Supabase project, open its SQL Editor, paste this SQL and run it. The board is public and scores are not cheat-proof.</p><textarea id="globalSql" class="config-input sql-input" rows="10" readonly>create table if not exists public.scores (
+  id bigint generated by default as identity primary key,
+  player_name text not null check (char_length(player_name) between 1 and 18),
+  score integer not null check (score >= 0),
+  accuracy integer not null check (accuracy between 0 and 100),
+  boss_reached integer not null check (boss_reached between 1 and 10),
+  created_at timestamptz not null default now()
+);
+alter table public.scores enable row level security;
+drop policy if exists "Anyone can view Math Boss scores" on public.scores;
+drop policy if exists "Anyone can submit Math Boss scores" on public.scores;
+create policy "Anyone can view Math Boss scores" on public.scores for select to anon using (true);
+create policy "Anyone can submit Math Boss scores" on public.scores for insert to anon with check (score >= 0 and accuracy between 0 and 100 and boss_reached between 1 and 10 and char_length(player_name) between 1 and 18);</textarea><button class="btn secondary" id="copySqlBtn" type="button" style="margin-top:8px">COPY SETUP SQL</button></details>
+ </div>
+</section>
+<section class="footer-grid"><div class="card"><div class="small-title">🪐 Battle rules</div><div class="rule"><span class="dot">✦</span><span class="muted">Correct answer: deal damage and earn points.</span></div><div class="rule"><span class="dot">✦</span><span class="muted">Wrong answer or retreat: lose one shield.</span></div><div class="rule"><span class="dot">✦</span><span class="muted">Defeat all ten bosses to win the run.</span></div></div><div class="card"><div class="small-title">🧠 How to win</div><p class="muted">Use the hint if you're stuck. Some challenges involve modular arithmetic, number theory, algebra, and sequences. This game checks your final answer; scratch paper is allowed.</p></div></section>
+</main>
+<div class="overlay" id="overlay"><div class="card modal"><div style="font-size:3.5rem">🌌</div><div class="eyebrow">Universe in danger</div><h2 id="modalTitle">Ready, challenger?</h2><p id="modalText">Ten bosses. Extreme math. Three shields. Your progress saves on this device. Can you defeat the Math Universe's toughest guardians?</p><button class="btn primary" id="startBtn">START THE RUN 🚀</button><button class="btn secondary" id="openOnlineBtn" type="button">🎮 PLAY MULTIPLAYER</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const bosses = [
+ {name:"The Algebra Hydra",desc:"Guardian of the Unknown",icon:"🐲",hp:100,topic:"ALGEBRA",specialName:"Twin-claw strike",specialDesc:"steals 15 points on a mistake."},
+ {name:"The Prime Phantom",desc:"Keeper of Hidden Divisors",icon:"👻",hp:120,topic:"NUMBER THEORY",specialName:"Soul tax",specialDesc:"steals up to 15 coins."},
+ {name:"The Sequence Serpent",desc:"Predictor of Cosmic Patterns",icon:"🐍",hp:140,topic:"SEQUENCES",specialName:"Time-loop",specialDesc:"makes your next hit deal 10 less damage."},
+ {name:"The Modular Titan",desc:"Master of Remainders",icon:"🪨",hp:160,topic:"MODULAR ARITHMETIC",specialName:"Gravity crush",specialDesc:"crushes 20 points from your score."},
+ {name:"The Infinity Core",desc:"Heart of the Math Universe",icon:"🌌",hp:180,topic:"MIXED EXTREME",specialName:"Event horizon",specialDesc:"swallows 10% of your score."},
+ {name:"The Fraction Phoenix",desc:"Reborn from Ratios",icon:"🔥",hp:200,topic:"FRACTIONS & RATIOS",specialName:"Ash storm",specialDesc:"burns up to 10 coins."},
+ {name:"The Geometry Golem",desc:"Architect of Dimensions",icon:"🗿",hp:220,topic:"GEOMETRY",specialName:"Stone wall",specialDesc:"reduces your next hit by 15 damage."},
+ {name:"The Probability Witch",desc:"Twister of Outcomes",icon:"🧙",hp:240,topic:"PROBABILITY",specialName:"Probability curse",specialDesc:"randomly steals 0–20 coins."},
+ {name:"The Logarithm Leviathan",desc:"Devourer of Exponents",icon:"🐉",hp:260,topic:"EXPONENTS",specialName:"Abyssal toll",specialDesc:"consumes 15% of your coins."},
+ {name:"OMEGA: Final Equation",desc:"The Last Guardian",icon:"👑",hp:300,topic:"OMEGA MIX",specialName:"Final judgment",specialDesc:"steals up to 30 coins and weakens your next hit."}
+];
+let bossIndex=0,bossHP=bosses[0].hp,playerHP=3,score=0,streak=0,asked=0,correct=0,current=null,runActive=false,usedHint=false,soundOn=true,audioCtx=null,damagePenalty=0,recordedThisRun=false;
+const PROFILE_KEY="mathBossBattlesProfileV3", SCORES_KEY="mathBossBattlesLocalScoresV1", SAVE_KEY="mathBossBattlesSaveV2", SAVE_BACKUP_KEY="mathBossBattlesSaveBackupV1", GLOBAL_KEY="mathBossBattlesGlobalConfigV1";
+const skins=[
+ {id:"default",name:"Cosmic Classic",icon:"👾",cost:0,rarity:"Starter"},
+ {id:"flame",name:"Solar Flare",icon:"🔥",cost:120,rarity:"Rare"},
+ {id:"ice",name:"Frost Nova",icon:"❄️",cost:180,rarity:"Rare"},
+ {id:"royal",name:"Royal Champion",icon:"👑",cost:260,rarity:"Epic"},
+ {id:"alien",name:"Void Alien",icon:"👽",cost:350,rarity:"Epic"},
+ {id:"crystal",name:"Crystal Spirit",icon:"💎",cost:500,rarity:"Legendary"}
+];
+let profile={coins:0,unlocked:["default"],equipped:"default",playerName:"StarPilot"};
+let globalConfig=null;
+// Multiplayer uses Supabase Realtime Broadcast/Presence. This is intentionally casual, not anti-cheat.
+let mpClient=null,mpLobbyChannel=null,mpRoomChannel=null,mpPlayerId=createMpId(),mpMode=null,mpRole=null,mpRoomCode="",mpMatchInitiated=false,mpMatchStarted=false,mpGameOver=false,mpRound=0,mpQuestion=null,mpRoundEnded=false,mpScores={},mpPlayers=[],mpTimer=null,mpNextTimer=null,mpClockInterval=null,mpRoundDeadline=0,mpQuestionNonce="",mpSubmissionCounter=0,mpLocalPendingSubmission=null,mpRecentAnswerIds=new Set(),mpAttemptTimes=new Map(),mpAttemptCounts=new Map(),mpResultHandledNonce="",mpHostSeen=false;
+const MP_ROUNDS=8, MP_ROUND_SECONDS=50, MP_ROUND_MS=MP_ROUND_SECONDS*1000, MP_MIN_SUBMIT_GAP_MS=180, MP_MAX_ATTEMPTS_PER_ROUND=40;
+const $=id=>document.getElementById(id);
+
+function safeStoreGet(key){try{return localStorage.getItem(key)}catch(e){return null}}
+function safeStoreSet(key,value){try{localStorage.setItem(key,value);return true}catch(e){return false}}
+function loadProfile(){try{const d=JSON.parse(safeStoreGet(PROFILE_KEY)||"null");if(d&&typeof d==="object")profile={...profile,...d}}catch(e){}if(!Array.isArray(profile.unlocked))profile.unlocked=["default"];profile.unlocked=[...new Set(profile.unlocked.filter(id=>skins.some(s=>s.id===id)))];if(!profile.unlocked.includes("default"))profile.unlocked.unshift("default");profile.coins=Math.max(0,Math.min(1000000000,Math.floor(Number(profile.coins)||0)));if(!skins.some(s=>s.id===profile.equipped)||!profile.unlocked.includes(profile.equipped))profile.equipped="default";profile.playerName=cleanName(profile.playerName||"StarPilot")}
+function cleanName(value){return String(value||"").replace(/[<>\u0000-\u001f]/g,"").trim().replace(/\s+/g," ").slice(0,18)||"StarPilot"}
+function normalizeAnswer(value){return String(value??"").trim().replace(/,/g,"").replace(/\s+/g,"").toLowerCase()}
+function answersMatch(value,expected){const a=normalizeAnswer(value),b=normalizeAnswer(expected);if(a===b)return true;if(/^[+-]?\d+$/.test(a)&&/^[+-]?\d+$/.test(b)){try{return BigInt(a)===BigInt(b)}catch(e){}}return false}
+async function fetchWithTimeout(url,options={},timeoutMs=12000){if(typeof AbortController==="undefined")return fetch(url,options);const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);try{return await fetch(url,{...options,signal:controller.signal})}finally{clearTimeout(timer)}}
+function saveProfile(){safeStoreSet(PROFILE_KEY,JSON.stringify(profile));renderShop();updateSkinPill();updateProfileBadge();if(typeof saveProgress==="function")saveProgress(false)}
+function addCoins(n){profile.coins=Math.max(0,profile.coins+n);saveProfile()}
+function currentSkin(){return skins.find(s=>s.id===profile.equipped)||skins[0]}
+function updateSkinPill(){const s=currentSkin();const el=$("skinPill");if(el)el.textContent=`🎭 ${s.icon} ${s.name}`}
+function updateProfileBadge(){const el=$("profileTagName");if(el)el.textContent=profile.playerName||"StarPilot";const pill=$("profileTagPill");if(pill)pill.title=`${profile.playerName||"StarPilot"} · Custom blue-check badge (cosmetic)`}
+function renderShop(){const el=$("shopList");if(!el)return;$("coinPill").textContent=`🪙 ${profile.coins} coins`;el.innerHTML="";skins.forEach(s=>{const owned=profile.unlocked.includes(s.id),equipped=profile.equipped===s.id;const row=document.createElement("div");row.className="shop-item";const info=document.createElement("div");info.className="shop-info";const icon=document.createElement("span");icon.className="skin-preview";icon.textContent=s.icon;const meta=document.createElement("span");meta.className="skin-meta";const name=document.createElement("strong");name.textContent=s.name;const small=document.createElement("small");small.textContent=owned?(equipped?"Currently equipped":"Unlocked · "+s.rarity):`${s.rarity} · Cost: ${s.cost} coins`;meta.append(name,small);info.append(icon,meta);const btn=document.createElement("button");btn.type="button";btn.className="btn "+(equipped?"primary":"secondary");btn.textContent=equipped?"EQUIPPED":owned?"EQUIP":"BUY";btn.disabled=equipped||(!owned&&profile.coins<s.cost);btn.addEventListener("click",()=>{if(!profile.unlocked.includes(s.id)){if(profile.coins<s.cost)return;profile.coins-=s.cost;profile.unlocked.push(s.id)}profile.equipped=s.id;playSound("hint");saveProfile();update()});row.append(info,btn);el.appendChild(row)})}
+function specialAttack(){const effects=[
+ ()=>{score=Math.max(0,score-15);return "🐲 HYDRA SPECIAL — Twin-claw strike! −15 points."},
+ ()=>{const n=Math.min(profile.coins,15);profile.coins-=n;saveProfile();return `👻 PHANTOM SPECIAL — Soul tax! −${n} coins.`},
+ ()=>{damagePenalty=Math.max(damagePenalty,10);return "🐍 SERPENT SPECIAL — Time-loop! Your next hit deals 10 less damage."},
+ ()=>{score=Math.max(0,score-20);return "🪨 TITAN SPECIAL — Gravity crush! −20 points."},
+ ()=>{const n=Math.ceil(score*.10);score=Math.max(0,score-n);return `🌌 INFINITY SPECIAL — Event horizon! −${n} points.`},
+ ()=>{const n=Math.min(profile.coins,10);profile.coins-=n;saveProfile();return `🔥 PHOENIX SPECIAL — Ash storm! −${n} coins.`},
+ ()=>{damagePenalty=Math.max(damagePenalty,15);return "🗿 GOLEM SPECIAL — Stone wall! Your next hit deals 15 less damage."},
+ ()=>{const n=Math.min(profile.coins,Math.floor(Math.random()*21));profile.coins-=n;saveProfile();return `🧙 WITCH SPECIAL — Probability curse! −${n} coins.`},
+ ()=>{const n=Math.ceil(profile.coins*.15);profile.coins=Math.max(0,profile.coins-n);saveProfile();return `🐉 LEVIATHAN SPECIAL — Abyssal toll! −${n} coins.`},
+ ()=>{const n=Math.min(profile.coins,30);profile.coins-=n;saveProfile();damagePenalty=Math.max(damagePenalty,15);return `👑 OMEGA SPECIAL — Final judgment! −${n} coins and your next hit is weakened.`}
+ ];
+ const art=$("bossArt");art.classList.remove("special");void art.offsetWidth;art.classList.add("special");return effects[bossIndex]();}
+function getLocalScores(){try{const v=JSON.parse(safeStoreGet(SCORES_KEY)||"[]");return Array.isArray(v)?v:[]}catch(e){return []}}
+function recordRun(){if(recordedThisRun)return;recordedThisRun=true;const entry={name:profile.playerName,score,accuracy:asked?Math.round(correct/asked*100):0,boss:Math.min(bossIndex+1,bosses.length),date:new Date().toLocaleDateString()};const arr=getLocalScores();arr.push(entry);arr.sort((a,b)=>b.score-a.score);safeStoreSet(SCORES_KEY,JSON.stringify(arr.slice(0,20)));renderLeaderboard();submitGlobalScore(entry)}
+function renderLeaderboard(){const el=$("leaderboardList");if(!el)return;const arr=getLocalScores();el.innerHTML="";if(!arr.length){const li=document.createElement("li");li.textContent="No completed runs yet. Finish a run to set a score!";el.appendChild(li);return}arr.slice(0,5).forEach((r,i)=>{const li=document.createElement("li");li.textContent=`${i+1}. ${cleanName(r.name||"StarPilot")} · ${Number(r.score)||0} pts · ${Number(r.accuracy)||0}% · boss ${Number(r.boss)||1}/10`;el.appendChild(li)})}
+function loadGlobalConfig(){try{const d=JSON.parse(safeStoreGet(GLOBAL_KEY)||"null");if(d&&d.url&&d.key){globalConfig={url:String(d.url).replace(/\/$/,""),key:String(d.key)};$('supabaseUrl').value=globalConfig.url;$('supabaseKey').value=globalConfig.key}}catch(e){globalConfig=null}}
+function globalHeaders(){return {"apikey":globalConfig.key,"Authorization":"Bearer "+globalConfig.key,"Content-Type":"application/json"}}
+function globalScoresUrl(){return globalConfig.url+"/rest/v1/scores?select=player_name,score,accuracy,boss_reached,created_at&order=score.desc&limit=10"}
+function renderGlobalScores(rows){const el=$("globalLeaderboardList");el.innerHTML="";if(!rows.length){const li=document.createElement("li");li.textContent="No online scores yet. Be the first to finish a run!";el.appendChild(li);return}rows.forEach((r,i)=>{const li=document.createElement("li");const date=r.created_at?new Date(r.created_at).toLocaleDateString():"";li.textContent=`${i+1}. ${cleanName(r.player_name||"StarPilot")} · ${Number(r.score)||0} pts · ${Number(r.accuracy)||0}% · boss ${Number(r.boss_reached)||1}/10${date?" · "+date:""}`;el.appendChild(li)})}
+async function refreshGlobalBoard(showStatus=true){if(!globalConfig){if(showStatus)$('globalStatus').textContent="Not connected. Open setup below to connect a shared online board.";return}try{const resp=await fetchWithTimeout(globalScoresUrl(),{headers:globalHeaders()});if(!resp.ok)throw new Error("HTTP "+resp.status);const rows=await resp.json();renderGlobalScores(Array.isArray(rows)?rows:[]);$('globalStatus').textContent="🌐 Connected — online scores are shared through your configured database."}catch(e){$('globalStatus').textContent="Could not load online scores. Check your URL, public anon key, table, policies, and connection."}}
+async function connectGlobal(){const url=$('supabaseUrl').value.trim().replace(/\/$/,"");const key=$('supabaseKey').value.trim();if(!/^https:\/\/[a-z0-9.-]+$/i.test(url)||!key){$('globalStatus').textContent="Enter a valid HTTPS Supabase project URL and its publishable/anon key.";return}const button=$('connectGlobalBtn');button.disabled=true;button.textContent="CONNECTING…";const previous=globalConfig;globalConfig={url,key};try{const resp=await fetchWithTimeout(globalScoresUrl(),{headers:globalHeaders()});if(!resp.ok)throw new Error("Connection failed");const rows=await resp.json();if(!safeStoreSet(GLOBAL_KEY,JSON.stringify(globalConfig)))throw new Error("Browser storage unavailable");renderGlobalScores(Array.isArray(rows)?rows:[]);$('globalStatus').textContent="✅ Online leaderboard connected! Finished runs can now be submitted.";playSound("win")}catch(e){globalConfig=previous;$('globalStatus').textContent="Connection failed. Run the SQL setup below, then verify the URL and anon key. Never use a service_role/secret key here."}finally{button.disabled=false;button.textContent="CONNECT GLOBAL BOARD"}}
+async function submitGlobalScore(entry){if(!globalConfig)return;try{const resp=await fetchWithTimeout(globalConfig.url+"/rest/v1/scores",{method:"POST",headers:{...globalHeaders(),"Prefer":"return=minimal"},body:JSON.stringify({player_name:cleanName(entry.name),score:entry.score,accuracy:entry.accuracy,boss_reached:entry.boss})});if(!resp.ok)throw new Error("Upload failed");$('globalStatus').textContent="✅ Run posted to the online leaderboard.";await refreshGlobalBoard(false)}catch(e){$('globalStatus').textContent="Local score saved, but online upload failed. Check database insert policy."}}
+
+function createMpId(){try{if(window.crypto&&crypto.randomUUID)return "pilot-"+crypto.randomUUID()}catch(e){}return "pilot-"+Math.random().toString(36).slice(2)+Date.now().toString(36)}
+function mpSetStatus(text,isGood=false){const el=$("mpStatus");if(el){el.textContent=text;el.classList.toggle("mp-online",!!isGood)}}
+function mpSetConnected(connected){["randomMatchBtn","createRoomBtn","joinRoomBtn"].forEach(id=>{if($(id))$(id).disabled=!connected});if($("connectPlayBtn")){$("connectPlayBtn").textContent=connected?"✅ ONLINE PLAY CONNECTED":"🌐 CONNECT ONLINE PLAY"}if($("cancelSearchBtn"))$("cancelSearchBtn").disabled=!mpLobbyChannel;if($("leaveRoomBtn"))$("leaveRoomBtn").disabled=!mpRoomChannel;if($("copyInviteBtn"))$("copyInviteBtn").disabled=!mpRoomCode||!mpRoomChannel}
+function mpUpdateButtons(){mpSetConnected(!!mpClient);if($("cancelSearchBtn"))$("cancelSearchBtn").disabled=!mpLobbyChannel;if($("leaveRoomBtn"))$("leaveRoomBtn").disabled=!mpRoomChannel;if($("copyInviteBtn"))$("copyInviteBtn").disabled=!(mpRoomCode&&mpRoomChannel)}
+function mpPresenceUsers(channel){if(!channel)return[];const state=channel.presenceState?channel.presenceState():{};const map=new Map();Object.values(state||{}).flat().forEach(p=>{if(p&&p.playerId)map.set(p.playerId,p)});return Array.from(map.values())}
+function mpNameFor(id){const p=mpPlayers.find(x=>x.playerId===id);return p?cleanName(p.name):id===mpPlayerId?profile.playerName:"Challenger"}
+function mpRefreshPlayers(){if(!$("mpPlayersText"))return;const you=mpPlayers.find(p=>p.playerId===mpPlayerId);const others=mpPlayers.filter(p=>p.playerId!==mpPlayerId);const youName=you?cleanName(you.name):profile.playerName;const them=others[0];$("mpPlayersText").textContent=mpRoomChannel?`Room ${mpRoomCode} · You: ${youName}${them?" · Challenger: "+cleanName(them.name):" · Waiting for challenger…"}`:mpLobbyChannel?`Searching for a random challenger as ${profile.playerName}…`:"Players: not connected";if($("mpYouName"))$("mpYouName").textContent=youName+" (YOU)";if($("mpThemName"))$("mpThemName").textContent=them?cleanName(them.name):"CHALLENGER";mpUpdateScoreboard()}
+function mpUpdateScoreboard(){const you=Number(mpScores[mpPlayerId])||0;const other=mpPlayers.find(p=>p.playerId!==mpPlayerId);const them=other?(Number(mpScores[other.playerId])||0):0;if($("mpYouScore"))$("mpYouScore").textContent=you;if($("mpThemScore"))$("mpThemScore").textContent=them;if($("mpRoundPill"))$("mpRoundPill").textContent=`ROUND ${mpRound} / ${MP_ROUNDS}`}
+function mpGetRoomCodeFromHash(){const m=String(location.hash||"").match(/(?:^#|[&#])room=([A-Z0-9]{4,8})/i);return m?m[1].toUpperCase():""}
+function mpTopicHash(value){let h=2166136261;for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36).toUpperCase()}
+async function connectOnlinePlay(){
+ if(mpClient){mpSetStatus("✅ Online play is connected. Find a random player or create/join a friend room.",true);return}
+ const url=$("supabaseUrl").value.trim().replace(/\/$/,"");const key=$("supabaseKey").value.trim();
+ if(!/^https:\/\/[a-z0-9.-]+$/i.test(url)||!key){const details=document.querySelector(".global-settings");if(details)details.open=true;mpSetStatus("Enter your Supabase project URL and public publishable/anon key in the online leaderboard setup below, then tap CONNECT ONLINE PLAY again.");$("globalStatus").textContent="The same public project URL/key can power multiplayer. Never use a service_role or secret key.";return}
+ if(!window.supabase||typeof window.supabase.createClient!=="function"){mpSetStatus("The Realtime client library did not load. Check your internet connection, then reload this game.");return}
+ const btn=$("connectPlayBtn");btn.disabled=true;btn.textContent="CONNECTING…";
+ let candidate=null,probe=null;
+ try{
+  candidate=window.supabase.createClient(url,key,{realtime:{params:{eventsPerSecond:20}}});
+  probe=candidate.channel("math-boss-connect-check-"+mpPlayerId,{config:{broadcast:{self:false}}});
+  await new Promise((resolve,reject)=>{let settled=false;const finish=(fn,val)=>{if(settled)return;settled=true;clearTimeout(timer);fn(val)};const timer=setTimeout(()=>finish(reject,new Error("Realtime connection timed out")),12000);probe.subscribe(status=>{if(status==="SUBSCRIBED")finish(resolve,true);else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"||status==="CLOSED")finish(reject,new Error("Realtime status: "+status))})});
+  try{await candidate.removeChannel(probe)}catch(e){}
+  mpClient=candidate;globalConfig={url,key};safeStoreSet(GLOBAL_KEY,JSON.stringify(globalConfig));mpSetConnected(true);mpSetStatus("✅ Connected to Supabase Realtime. You can now find a random challenger or create a room for a friend.",true);mpRefreshPlayers();
+  const invite=mpGetRoomCodeFromHash();if(invite){$("friendRoomCode").value=invite;mpSetStatus("Friend invite detected. Tap JOIN to enter room "+invite+".",true)}
+ }catch(e){if(candidate&&probe){try{await candidate.removeChannel(probe)}catch(ignore){}}mpSetStatus("Could not connect to Realtime. Check the project URL/key, internet connection, and that Realtime is enabled in Supabase.");mpClient=null;mpSetConnected(false)}
+ finally{btn.disabled=false;if(mpClient)btn.textContent="✅ ONLINE PLAY CONNECTED";else btn.textContent="🌐 CONNECT ONLINE PLAY"}
+}
+function mpGetSharedQuestion(round){const oldBoss=bossIndex;bossIndex=(round-1)%bosses.length;let q;try{q=makeQuestion()}finally{bossIndex=oldBoss}return q}
+async function mpSend(event,payload){if(!mpRoomChannel)return;try{await mpRoomChannel.send({type:"broadcast",event,payload})}catch(e){mpSetStatus("Connection interrupted while sending a move. Check your internet and reconnect.")}}
+function mpStartClientClock(deadline){
+ mpRoundDeadline=Number(deadline)||Date.now()+MP_ROUND_MS;
+ if(mpClockInterval){clearInterval(mpClockInterval);mpClockInterval=null}
+ const tick=()=>{
+  const ms=Math.max(0,mpRoundDeadline-Date.now());
+  const secs=Math.ceil(ms/1000);
+  const pill=$("mpClockPill"),fill=$("mpTimerFill");
+  if(pill){pill.textContent=`⏱️ ${String(Math.floor(secs/60)).padStart(2,"0")}:${String(secs%60).padStart(2,"0")} LEFT`;pill.classList.toggle("mp-urgent",secs<=10);}
+  if(fill){fill.style.width=Math.max(0,Math.min(100,ms/MP_ROUND_MS*100))+"%";fill.classList.toggle("urgent",secs<=10)}
+  if(ms<=0){if(mpClockInterval){clearInterval(mpClockInterval);mpClockInterval=null}if(!mpRoundEnded){$("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true;$("mpRoundStatus").textContent="Time expired — waiting for the round result."}}
+ };
+ tick();mpClockInterval=setInterval(tick,200);
+}
+function mpStopClientClock(){if(mpClockInterval){clearInterval(mpClockInterval);mpClockInterval=null}}
+function mpShowQuestion(){
+ const panel=$("mpGamePanel");if(panel)panel.classList.remove("hide");
+ $("mpRoundPill").textContent=`ROUND ${mpRound} / ${MP_ROUNDS}`;
+ $("mpTopic").textContent=mpQuestion?.topic||"MIXED EXTREME";
+ $("mpQuestion").textContent=mpQuestion?.q||"Waiting for the other challenger…";
+ $("mpAnswer").value="";$("mpAnswer").disabled=!mpMatchStarted||mpGameOver||mpRoundEnded;$("mpAttackBtn").disabled=$("mpAnswer").disabled;
+ $("mpFeedback").textContent="";$("mpFeedback").className="feedback";
+ $("mpRoundStatus").textContent=`Same problem for both players. Solve it before ${MP_ROUND_SECONDS} seconds run out!`;
+ mpUpdateScoreboard();if(!$("mpGamePanel").classList.contains("hide"))$("mpGamePanel").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function mpApplyRoundResult(payload){
+ if(!payload||Number(payload.round)!==mpRound||!mpQuestionNonce||String(payload.questionNonce||"")!==mpQuestionNonce||mpResultHandledNonce===mpQuestionNonce)return;
+ const ids=mpPlayers.map(p=>p.playerId);const incoming=payload.scores;
+ if(!incoming||typeof incoming!=="object"||Object.keys(incoming).length!==ids.length)return;
+ if(payload.winnerId&&!ids.includes(payload.winnerId))return;
+ // Only a single +100 point award is valid; no arbitrary scoreboard jumps or score injection.
+ for(const id of ids){
+  const expected=(Number(mpScores[id])||0)+((mpRole!=="host"&&payload.winnerId===id)?100:0);
+  if(!Number.isInteger(Number(incoming[id]))||Number(incoming[id])!==expected||expected<0||expected>MP_ROUNDS*100)return;
+ }
+ mpResultHandledNonce=mpQuestionNonce;mpRoundEnded=true;mpScores={};ids.forEach(id=>mpScores[id]=Number(incoming[id]||0));mpUpdateScoreboard();
+ $("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true;
+ const winner=payload.winnerId?mpNameFor(payload.winnerId):"No one";
+ $("mpFeedback").textContent=payload.message||(payload.winnerId?`🏆 ${winner} wins the round!`:"Time's up — no point this round.");
+ $("mpFeedback").className="feedback "+(payload.winnerId===mpPlayerId?"good":"");
+ $("mpRoundStatus").textContent=payload.winnerId===mpPlayerId?"You got the point! Get ready for the next question.":payload.winnerId?`${winner} takes this point. Keep going!`:"Next question incoming…";
+ if(mpTimer){clearTimeout(mpTimer);mpTimer=null}mpStopClientClock();
+}
+function mpFinishDuel(payload){
+ mpGameOver=true;mpMatchStarted=false;mpRoundEnded=true;
+ if(mpTimer)clearTimeout(mpTimer);if(mpNextTimer)clearTimeout(mpNextTimer);mpStopClientClock();
+ mpScores=payload?.scores||mpScores;mpUpdateScoreboard();$("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true;
+ const you=Number(mpScores[mpPlayerId])||0;const other=mpPlayers.find(p=>p.playerId!==mpPlayerId);const them=other?(Number(mpScores[other.playerId])||0):0;
+ let headline=you===them?"🤝 TIE GAME!":you>them?"🏆 YOU WIN!":"💫 CHALLENGER WINS!";
+ $("mpQuestion").textContent=headline;$("mpTopic").textContent="DUEL COMPLETE";$("mpClockPill").textContent="🏁 FINISHED";$("mpClockPill").classList.remove("mp-urgent");$("mpTimerFill").style.width="0%";
+ $("mpFeedback").textContent=`Final score — ${profile.playerName}: ${you}, ${other?cleanName(other.name):"Challenger"}: ${them}.`;
+ $("mpFeedback").className="feedback good";$("mpRoundStatus").textContent="Want another game? Leave the room and find a new match or create a rematch room.";
+ mpSetStatus(headline+" The 8-round duel is complete. Your solo save is unchanged.",true)
+}
+function mpScheduleNextRound(){
+ if(mpNextTimer)clearTimeout(mpNextTimer);
+ mpNextTimer=setTimeout(()=>{
+  if(!mpRoomChannel||!mpMatchStarted||mpGameOver)return;
+  if(mpRound>=MP_ROUNDS){const final={scores:mpScores};mpSend("duel-over",final);mpFinishDuel(final)}else mpBeginRound();
+ },2200);
+}
+function mpTimeoutRound(){
+ if(mpRole!=="host"||mpRoundEnded||!mpMatchStarted||mpGameOver)return;
+ if(Date.now()<mpRoundDeadline){mpTimer=setTimeout(mpTimeoutRound,Math.max(20,mpRoundDeadline-Date.now()));return}
+ mpRoundEnded=true;if(mpTimer){clearTimeout(mpTimer);mpTimer=null}mpStopClientClock();
+ const result={round:mpRound,questionNonce:mpQuestionNonce,winnerId:null,scores:mpScores,message:"⏳ Time's up! No point this round."};
+ mpSend("duel-round-result",result);mpApplyRoundResult(result);mpScheduleNextRound();
+}
+function mpBeginRound(){
+ if(!mpRoomChannel||mpRole!=="host"||!mpMatchStarted||mpGameOver)return;
+ if(mpNextTimer){clearTimeout(mpNextTimer);mpNextTimer=null}
+ if(mpRound>=MP_ROUNDS){const result={scores:mpScores};mpSend("duel-over",result);mpFinishDuel(result);return}
+ mpRound++;mpRoundEnded=false;mpResultHandledNonce="";mpRecentAnswerIds=new Set();mpAttemptTimes=new Map();mpAttemptCounts=new Map();
+ mpQuestion=mpGetSharedQuestion(mpRound);mpQuestionNonce=createMpId();mpRoundDeadline=Date.now()+MP_ROUND_MS;
+ const publicQuestion={round:mpRound,question:{topic:mpQuestion.topic,q:mpQuestion.q},deadline:mpRoundDeadline,questionNonce:mpQuestionNonce,scores:{...mpScores}};
+ mpShowQuestion();mpStartClientClock(mpRoundDeadline);mpSend("duel-question",publicQuestion);
+ if(mpTimer)clearTimeout(mpTimer);mpTimer=setTimeout(mpTimeoutRound,MP_ROUND_MS);
+}
+function mpStartAsHost(){if(mpMatchStarted||mpGameOver||mpRole!=="host"||mpPlayers.length!==2)return;mpMatchStarted=true;mpGameOver=false;mpRound=0;mpScores={};mpPlayers.forEach(p=>mpScores[p.playerId]=0);mpSetStatus("Opponent connected! The 8-round math duel is starting…",true);mpUpdateScoreboard();mpSend("duel-start",{players:mpPlayers.map(p=>({playerId:p.playerId,name:cleanName(p.name)})),scores:mpScores,maxRounds:MP_ROUNDS});mpNextTimer=setTimeout(mpBeginRound,700)}
+function mpProcessAnswer(payload){
+ // Host-side validation blocks stale, duplicate, malformed, late and high-rate submissions.
+ if(mpRole!=="host"||!mpMatchStarted||mpGameOver||!mpQuestion||mpRoundEnded||!payload)return;
+ if(!Number.isInteger(Number(payload.round))||Number(payload.round)!==mpRound)return;
+ if(!mpQuestionNonce||String(payload.questionNonce||"")!==mpQuestionNonce)return;
+ if(Date.now()>=mpRoundDeadline){mpTimeoutRound();return}
+ const playerId=String(payload.playerId||"");
+ if(!playerId||!mpPlayers.some(p=>p.playerId===playerId)||!Object.prototype.hasOwnProperty.call(mpScores,playerId))return;
+ const submissionId=String(payload.submissionId||"");
+ if(!submissionId||submissionId.length>120||!submissionId.startsWith(playerId+"-")||mpRecentAnswerIds.has(submissionId))return;
+ const answer=String(payload.answer??"").trim();if(!answer||answer.length>100)return;
+ const now=Date.now(),last=mpAttemptTimes.get(playerId)||0,attempts=mpAttemptCounts.get(playerId)||0;
+ if(now-last<MP_MIN_SUBMIT_GAP_MS||attempts>=MP_MAX_ATTEMPTS_PER_ROUND)return;
+ mpAttemptTimes.set(playerId,now);mpAttemptCounts.set(playerId,attempts+1);mpRecentAnswerIds.add(submissionId);
+ const right=answersMatch(answer,mpQuestion.a);
+ if(!right){
+  const res={playerId,submissionId,correct:false,round:mpRound,questionNonce:mpQuestionNonce,message:"Not quite — try again before the 50-second clock runs out."};
+  mpSend("duel-answer-result",res);
+  if(playerId===mpPlayerId){$("mpAnswer").disabled=false;$("mpAttackBtn").disabled=false;$("mpAnswer").value="";$("mpFeedback").textContent=res.message;$("mpFeedback").className="feedback bad";$("mpAnswer").focus()}
+  return;
+ }
+ mpRoundEnded=true;if(mpTimer){clearTimeout(mpTimer);mpTimer=null}mpStopClientClock();
+ mpScores[playerId]=(Number(mpScores[playerId])||0)+100;
+ const player=mpPlayers.find(p=>p.playerId===playerId);const winnerName=player?cleanName(player.name):"Challenger";
+ const answerRes={playerId,submissionId,correct:true,round:mpRound,questionNonce:mpQuestionNonce,message:"✅ Correct answer!"};
+ mpSend("duel-answer-result",answerRes);
+ if(playerId===mpPlayerId){$("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true;$("mpFeedback").textContent=answerRes.message;$("mpFeedback").className="feedback good"}
+ const result={round:mpRound,questionNonce:mpQuestionNonce,winnerId:playerId,scores:mpScores,message:`⚡ ${winnerName} got it first! +100 points.`};
+ mpSend("duel-round-result",result);mpApplyRoundResult(result);mpScheduleNextRound();
+}
+function mpHandleRoomPresence(){
+ if(!mpRoomChannel)return;
+ let allPlayers=mpPresenceUsers(mpRoomChannel).filter(p=>p.playerId);
+ const hostPresent=()=>allPlayers.some(p=>p.role==="host");
+ if(hostPresent())mpHostSeen=true;
+ let promoted=false;
+ // A guest can only promote itself after seeing a host in this room and then
+ // observing that host disappear. A fresh guest joining a room before the first
+ // host presence sync therefore won't accidentally take over.
+ if(mpRole==="guest"&&mpHostSeen&&!hostPresent()&&allPlayers.some(p=>p.playerId===mpPlayerId)){
+  promoted=true;mpRole="host";mpHostSeen=true;
+  if(mpTimer){clearTimeout(mpTimer);mpTimer=null}
+  if(mpNextTimer){clearTimeout(mpNextTimer);mpNextTimer=null}
+  mpStopClientClock();mpRoundDeadline=0;mpQuestionNonce="";mpResultHandledNonce="";
+  mpMatchStarted=false;mpGameOver=false;mpRound=0;mpQuestion=null;mpRoundEnded=false;mpScores={};
+  mpLocalPendingSubmission=null;mpRecentAnswerIds=new Set();mpAttemptTimes=new Map();mpAttemptCounts=new Map();
+  const ownPresence=allPlayers.find(p=>p.playerId===mpPlayerId);
+  allPlayers=allPlayers.map(p=>p.playerId===mpPlayerId?{...p,role:"host"}:p);
+  const channel=mpRoomChannel;
+  Promise.resolve(channel.track({playerId:mpPlayerId,name:cleanName(profile.playerName),role:"host",mode:mpMode,joinedAt:Number(ownPresence?.joinedAt)||Date.now()})).catch(()=>{
+   mpSetStatus("The previous host disconnected, but host transfer could not update presence. Check your Realtime connection and rejoin the room.");
+  });
+  $("mpTopic").textContent="NEW DUEL";$("mpQuestion").textContent="Waiting for a new challenger…";
+  $("mpAnswer").value="";$("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true;
+  $("mpFeedback").textContent="The host disconnected. The interrupted duel ended; invite a new challenger to continue.";
+  $("mpFeedback").className="feedback";
+ }
+ // Use this client's elected role for its local copy immediately; Realtime will
+ // subsequently sync the updated track payload to the other participants.
+ allPlayers=allPlayers.map(p=>p.playerId===mpPlayerId?{...p,role:mpRole}:p);
+ allPlayers.sort((a,b)=>(a.role==="host"?0:1)-(b.role==="host"?0:1)||(Number(a.joinedAt)||0)-(Number(b.joinedAt)||0)||String(a.playerId).localeCompare(String(b.playerId)));
+ if(allPlayers.length>2){
+  const admitted=allPlayers.slice(0,2);
+  if(!admitted.some(p=>p.playerId===mpPlayerId)){
+   mpSetStatus("This duel room already has two players. Leaving the full room…");
+   Promise.resolve(mpLeaveRoom(false)).then(()=>mpSetStatus("Room full: this duel supports only two players. Join another room to play."));return;
+  }
+  mpPlayers=admitted;
+ }else mpPlayers=allPlayers;
+ mpRefreshPlayers();
+ if(mpLobbyChannel&&mpPlayers.some(p=>p.playerId!==mpPlayerId)){
+  const lobby=mpLobbyChannel;mpLobbyChannel=null;Promise.resolve(lobby.unsubscribe()).catch(()=>{});
+  mpSetStatus("Random challenger found! Getting the duel ready…",true);
+ }
+ if(mpPlayers.length===2){
+  if(mpRole==="host"&&!mpMatchStarted&&!mpGameOver)mpStartAsHost();
+  else if(!mpMatchStarted&&!mpGameOver)mpSetStatus("Connected to challenger. Waiting for the room host to start…",true);
+ }else if(mpMatchStarted&&!mpGameOver){
+  mpSetStatus("Your challenger disconnected. Waiting in the room in case they reconnect.");
+ }else if(promoted){
+  mpSetStatus(`The previous host disconnected. You are now the host. Share room ${mpRoomCode} to invite a new challenger.`,true);
+ }else if(mpRoomChannel){
+  mpSetStatus(mpMode==="random"?"Matched! Waiting for your random challenger to finish connecting…":`Room ${mpRoomCode} is open. Share the invite/code and wait for one challenger.`,true);
+ }
+ mpUpdateButtons();
+}
+async function mpOpenRoom(code,role,mode){if(!mpClient){mpSetStatus("Connect online play first.");return}if(mode!=="random"&&mpLobbyChannel)await mpCancelSearch();if(mpRoomChannel)await mpLeaveRoom(false);mpRoomCode=String(code).toUpperCase();mpRole=role;mpMode=mode;mpHostSeen=(role==="host");mpMatchInitiated=true;mpMatchStarted=false;mpGameOver=false;mpRound=0;mpQuestion=null;mpRoundEnded=false;mpScores={};mpPlayers=[];if(mpTimer)clearTimeout(mpTimer);mpStopClientClock();mpRoundDeadline=0;mpQuestionNonce="";mpResultHandledNonce="";if(mpNextTimer)clearTimeout(mpNextTimer);$("mpGamePanel").classList.remove("hide");$("mpQuestion").textContent="Waiting for your challenger…";$("mpFeedback").textContent="";$("mpPlayersText").textContent=`Room ${mpRoomCode} · Connecting…`;mpSetStatus(role==="host"?`Friend room ${mpRoomCode} created. Share the invite link or room code.`:`Joining friend room ${mpRoomCode}…`,true);const channel=mpClient.channel("math-boss-duel-"+mpRoomCode.toLowerCase(),{config:{broadcast:{self:false},presence:{key:mpPlayerId}}});mpRoomChannel=channel;
+ channel.on("presence",{event:"sync"},()=>mpHandleRoomPresence());
+ channel.on("broadcast",{event:"duel-start"},({payload})=>{if(mpRole==="host"||!payload||!Array.isArray(payload.players)||!payload.players.some(p=>p&&p.playerId===mpPlayerId))return;mpMatchStarted=true;mpGameOver=false;mpScores=payload.scores||{};mpRound=0;mpSetStatus("The duel is on! First correct answer wins each round.",true);mpUpdateScoreboard()});
+ channel.on("broadcast",{event:"duel-question"},({payload})=>{if(mpRole==="host"||!payload||!payload.question)return;const incomingRound=Number(payload.round);if(!Number.isInteger(incomingRound)||incomingRound<1||incomingRound>MP_ROUNDS||incomingRound!==mpRound+1||!payload.questionNonce||!Number.isFinite(Number(payload.deadline)))return;mpRound=incomingRound;mpQuestion={...payload.question,round:mpRound};mpQuestionNonce=String(payload.questionNonce);mpRoundDeadline=Number(payload.deadline);mpRoundEnded=false;mpResultHandledNonce="";if(payload.scores&&typeof payload.scores==="object"){const ids=mpPlayers.map(p=>p.playerId);const valid=ids.every(id=>Number.isInteger(Number(payload.scores[id]))&&Number(payload.scores[id])>=0&&Number(payload.scores[id])<=MP_ROUNDS*100);if(valid){mpScores={};ids.forEach(id=>mpScores[id]=Number(payload.scores[id]));}}mpShowQuestion();mpStartClientClock(mpRoundDeadline);if(mpTimer){clearTimeout(mpTimer);mpTimer=null}if(mpRoundDeadline<=Date.now()){$("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true}});
+ channel.on("broadcast",{event:"duel-answer"},({payload})=>{if(mpRole==="host"&&payload)mpProcessAnswer(payload)});
+ channel.on("broadcast",{event:"duel-answer-result"},({payload})=>{if(!payload||payload.playerId!==mpPlayerId||Number(payload.round)!==mpRound||String(payload.questionNonce||"")!==mpQuestionNonce)return;if(mpLocalPendingSubmission&&payload.submissionId!==mpLocalPendingSubmission)return;if(!payload.correct&&!mpRoundEnded){$("mpAnswer").disabled=false;$("mpAttackBtn").disabled=false;$("mpAnswer").value="";$("mpFeedback").textContent=payload.message||"Wrong answer — try again.";$("mpFeedback").className="feedback bad";$("mpAnswer").focus()}else if(payload.correct){$("mpFeedback").textContent=payload.message||"Correct!";$("mpFeedback").className="feedback good";$("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true}mpLocalPendingSubmission=null});
+ channel.on("broadcast",{event:"duel-round-result"},({payload})=>{if(mpRole!=="host")mpApplyRoundResult(payload)});
+ channel.on("broadcast",{event:"duel-over"},({payload})=>{if(mpRole==="host"||mpRound!==MP_ROUNDS||!payload?.scores)return;const ids=mpPlayers.map(p=>p.playerId);if(ids.every(id=>Number(payload.scores[id])===Number(mpScores[id])&&Number.isInteger(Number(payload.scores[id]))))mpFinishDuel(payload)});
+ channel.subscribe(async status=>{if(status==="SUBSCRIBED"){try{await channel.track({playerId:mpPlayerId,name:cleanName(profile.playerName),role:mpRole,mode:mpMode,joinedAt:Date.now()})}catch(e){mpSetStatus("Joined channel but could not announce player presence. Check Realtime settings.")}mpUpdateButtons();mpHandleRoomPresence()}else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"){mpSetStatus("Could not join the room. Check Realtime settings and room code.");mpUpdateButtons()}});mpUpdateButtons()}
+async function mpFindRandom(){if(!mpClient){mpSetStatus("Connect online play first.");return}if(mpLobbyChannel||mpRoomChannel)return;mpMatchInitiated=false;mpMode="random";mpRole=null;mpSetStatus("Searching for another player who is online and searching too…",true);$("randomMatchBtn").disabled=true;$("cancelSearchBtn").disabled=false;const ch=mpClient.channel("math-boss-random-lobby-v1",{config:{presence:{key:mpPlayerId}}});mpLobbyChannel=ch;ch.on("presence",{event:"sync"},()=>mpTryRandomPair());ch.subscribe(async status=>{if(status==="SUBSCRIBED"){try{await ch.track({playerId:mpPlayerId,name:cleanName(profile.playerName),waiting:true,joinedAt:Date.now()});mpTryRandomPair()}catch(e){mpSetStatus("Could not join matchmaking. Please try again.");await mpCancelSearch()}}else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"){mpSetStatus("Random matchmaking could not connect. Check your Realtime setup.");await mpCancelSearch()}});mpUpdateButtons()}
+function mpTryRandomPair(){if(!mpLobbyChannel||mpMatchInitiated)return;const waiting=mpPresenceUsers(mpLobbyChannel).filter(p=>p.waiting!==false&&p.playerId).sort((a,b)=>(Number(a.joinedAt)||0)-(Number(b.joinedAt)||0)||String(a.playerId).localeCompare(String(b.playerId)));for(let i=0;i+1<waiting.length;i+=2){const pair=[waiting[i],waiting[i+1]];if(!pair.some(p=>p.playerId===mpPlayerId))continue;mpMatchInitiated=true;const ids=pair.map(p=>p.playerId).sort();const roomCode="R"+mpTopicHash(ids.join("|")).slice(0,7);mpRole=mpPlayerId===ids[0]?"host":"guest";mpSetStatus("Random challenger found! Connecting the duel…",true);mpOpenRoom(roomCode,mpRole,"random");return}mpSetStatus("Searching… keep this page open. When another player queues, you will be paired automatically.",true)}
+async function mpCancelSearch(){if(mpLobbyChannel){const ch=mpLobbyChannel;mpLobbyChannel=null;try{await ch.unsubscribe()}catch(e){}}mpMatchInitiated=false;mpSetStatus(mpClient?"Search cancelled. You can find another random challenger or invite a friend.":"Not connected.");mpUpdateButtons()}
+function mpCreateFriendRoom(){if(!mpClient){mpSetStatus("Connect online play first.");return}const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let code="";for(let i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];$("friendRoomCode").value=code;mpOpenRoom(code,"host","friend")}
+function mpJoinFriendRoom(){const code=$("friendRoomCode").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");if(code.length<4||code.length>8){mpSetStatus("Enter a valid 4–8 character room code from your friend.");return}mpOpenRoom(code,"guest","friend")}
+async function mpCopyInvite(){if(!mpRoomCode)return;const url=location.href.split("#")[0]+"#room="+encodeURIComponent(mpRoomCode);const value=location.protocol==="file:"?`Math Battles room code: ${mpRoomCode}\nBoth players must open the same published Math Battles website first.`:url;try{await navigator.clipboard.writeText(value);mpSetStatus(location.protocol==="file:"?"Room code copied. Because this page is a local file, first publish the HTML so your friend can open the same website.":"Invite link copied! Send it to your friend, who should open the game and connect online play.",true)}catch(e){$("friendRoomCode").value=mpRoomCode;mpSetStatus("Room code: "+mpRoomCode+". Copy it manually and send it to your friend. Both players must open the same hosted game page.",true)}}
+async function mpLeaveRoom(showMessage=true){if(mpTimer){clearTimeout(mpTimer);mpTimer=null}mpStopClientClock();mpRoundDeadline=0;mpQuestionNonce="";if(mpNextTimer){clearTimeout(mpNextTimer);mpNextTimer=null}if(mpRoomChannel){const c=mpRoomChannel;mpRoomChannel=null;try{await c.unsubscribe()}catch(e){}}mpRole=null;mpMode=null;mpRoomCode="";mpHostSeen=false;mpMatchStarted=false;mpGameOver=false;mpRound=0;mpQuestion=null;mpRoundEnded=false;mpScores={};mpPlayers=[];mpMatchInitiated=false;mpLocalPendingSubmission=null;$("mpGamePanel").classList.add("hide");mpRefreshPlayers();mpUpdateButtons();if(showMessage)mpSetStatus("You left the duel. Solo progress is safe; join another match whenever you are ready.")}
+function mpSubmitAnswer(event){event.preventDefault();if(!mpMatchStarted||mpGameOver||mpRoundEnded||!mpQuestion||!mpRoomChannel||Date.now()>=mpRoundDeadline)return;const answer=$("mpAnswer").value.trim();if(!answer)return;$("mpAnswer").disabled=true;$("mpAttackBtn").disabled=true;const submissionId=mpPlayerId+"-"+(++mpSubmissionCounter);mpLocalPendingSubmission=submissionId;$("mpFeedback").textContent="Answer sent — waiting for verification…";$("mpFeedback").className="feedback";const payload={playerId:mpPlayerId,submissionId,answer:String(answer).slice(0,100),round:mpRound,questionNonce:mpQuestionNonce};if(mpRole==="host")mpProcessAnswer(payload);else mpSend("duel-answer",payload)}
+function mpOpenSetup(){const details=document.querySelector(".global-settings");if(details)details.open=true;$("supabaseUrl").focus();mpSetStatus("Enter your Supabase project URL and public publishable/anon key in the expanded setup, then press CONNECT ONLINE PLAY.")}
+
+
+// -------- Server-verified ranked mode --------
+const RANKED_MATCH_KEY = "mathBossRankedCurrentMatchV1";
+let rankedClient = null, rankedProjectUrl = "", rankedPublicKey = "", rankedConnected = false;
+let rankedMatchId = null, rankedMatchState = null, rankedPollTimer = null, rankedClockTimer = null;
+let rankedPollingInFlight = false, rankedSubmitting = false, rankedServerOffsetMs = 0, rankedLastNonce = null;
+
+function rankedStatus(text, good=false){const el=$("rankedStatus");if(el){el.textContent=text;el.classList.toggle("ranked-status-good",!!good)}}
+function rankedHasOpenMatch(){return !!rankedMatchState && ["waiting","active"].includes(rankedMatchState.status)}
+function rankedUpdateButtons(){
+ const open=rankedHasOpenMatch();
+ $("rankedFindBtn").disabled=!rankedConnected||open;
+ $("rankedCreateRoomBtn").disabled=!rankedConnected||open;
+ $("rankedJoinRoomBtn").disabled=!rankedConnected||open;
+ $("rankedRoomCode").disabled=!rankedConnected||open;
+ $("rankedStopBtn").disabled=!rankedConnected||!rankedMatchState||rankedMatchState.status!=="waiting";
+ $("rankedForfeitBtn").disabled=!rankedConnected||!open;
+ $("rankedCopyInviteBtn").disabled=!(rankedConnected&&rankedMatchState&&rankedMatchState.roomCode&&rankedMatchState.status==="waiting");
+ $("rankedConnectBtn").textContent=rankedConnected?"✅ RANKED SERVER CONNECTED":"🔐 CONNECT RANKED SERVER";
+}
+function rankedAuthClient(){
+ if(!globalConfig)throw new Error("Enter the Supabase project URL and public key in the shared leaderboard setup first.");
+ if(!window.supabase||typeof window.supabase.createClient!=="function")throw new Error("Supabase JS did not load. Check your internet connection and reload.");
+ if(!rankedClient||rankedProjectUrl!==globalConfig.url||rankedPublicKey!==globalConfig.key){
+   rankedClient=window.supabase.createClient(globalConfig.url,globalConfig.key,{auth:{storageKey:"math-boss-ranked-auth",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+   rankedProjectUrl=globalConfig.url;rankedPublicKey=globalConfig.key;
+ }
+ return rankedClient;
+}
+async function rankedApi(action, extra={}){
+ if(!rankedClient)throw new Error("Connect to the ranked server first.");
+ const {data:sessionData,error:sessionError}=await rankedClient.auth.getSession();
+ if(sessionError)throw new Error(sessionError.message||"Could not read ranked session.");
+ const session=sessionData&&sessionData.session;
+ if(!session||!session.access_token)throw new Error("Your ranked guest session expired. Connect again.");
+ const response=await fetchWithTimeout(rankedProjectUrl+"/functions/v1/ranked-match",{
+   method:"POST",headers:{"Content-Type":"application/json","apikey":rankedPublicKey,"Authorization":"Bearer "+session.access_token},
+   body:JSON.stringify({action,playerName:cleanName(profile.playerName),...extra})
+ });
+ let data={};try{data=await response.json()}catch(e){}
+ if(!response.ok||!data.ok)throw new Error(data.error||("Ranked server returned HTTP "+response.status));
+ return data;
+}
+async function rankedConnect(){
+ const url=$("supabaseUrl").value.trim().replace(/\/$/,"");const key=$("supabaseKey").value.trim();
+ if(!/^https:\/\/[a-z0-9.-]+$/i.test(url)||!key){const details=document.querySelector(".global-settings");if(details)details.open=true;rankedStatus("Enter your Supabase project URL and public publishable/anon key in the setup below.");return}
+ const btn=$("rankedConnectBtn");btn.disabled=true;btn.textContent="CONNECTING…";rankedStatus("Authenticating a guest session and checking the server-ranked endpoint…");
+ try{
+   globalConfig={url,key};safeStoreSet(GLOBAL_KEY,JSON.stringify(globalConfig));
+   const client=rankedAuthClient();let {data,error}=await client.auth.getSession();if(error)throw error;
+   if(!data.session){const signed=await client.auth.signInAnonymously({options:{data:{display_name:cleanName(profile.playerName)}}});if(signed.error)throw new Error(signed.error.message+" Enable Anonymous Sign-Ins in your Supabase Auth settings.");}
+   // This endpoint test succeeds only after the migration and Edge Function are deployed.
+   const board=await rankedApi("leaderboard");rankedConnected=true;rankedRenderLeaderboard(board.leaderboard||[]);
+   rankedStatus("✅ Connected and authenticated. Ranked scores and answer validation are controlled by the server.",true);rankedUpdateButtons();
+   const savedMatch=safeStoreGet(RANKED_MATCH_KEY);
+   if(savedMatch){try{const result=await rankedApi("state",{matchId:savedMatch});if(result.state&&["waiting","active"].includes(result.state.status)){rankedSetState(result.state);rankedStartPolling()}else{safeStoreSet(RANKED_MATCH_KEY,"")}}catch(e){safeStoreSet(RANKED_MATCH_KEY,"")}}
+ }catch(e){rankedConnected=false;rankedUpdateButtons();rankedStatus("Ranked server is not ready: "+String(e.message||e)+" Apply the SQL migration and deploy the ranked-match Edge Function, then reconnect.");}
+ finally{btn.disabled=false;rankedUpdateButtons()}
+}
+function rankedRenderLeaderboard(rows){
+ const el=$("rankedLeaderboard");el.replaceChildren();
+ if(!Array.isArray(rows)||!rows.length){const li=document.createElement("li");li.textContent="No completed ranked matches yet. Be the first to finish one!";el.appendChild(li);return}
+ rows.slice(0,10).forEach(r=>{const li=document.createElement("li");li.textContent=`#${Number(r.rank)||"—"} ${cleanName(r.playerName||"Player")} · ${Number(r.wins)||0} wins · ${Number(r.totalPoints)||0} points · ${Number(r.matchesPlayed)||0} matches`;el.appendChild(li)})
+}
+async function rankedRefreshLeaderboard(){try{const data=await rankedApi("leaderboard");rankedRenderLeaderboard(data.leaderboard||[])}catch(e){rankedStatus("Ranked leaderboard refresh failed: "+String(e.message||e));}}
+function rankedSetState(state){
+ if(!state||!state.matchId)return;
+ const previousNonce=rankedLastNonce;rankedMatchState=state;rankedMatchId=state.matchId;
+ rankedServerOffsetMs=Date.parse(state.serverNow||new Date().toISOString())-Date.now();
+ if(["waiting","active"].includes(state.status))safeStoreSet(RANKED_MATCH_KEY,state.matchId);else safeStoreSet(RANKED_MATCH_KEY,"");
+ const p1=state.player1||{},p2=state.player2||null;const amP1=p1.id===state.myPlayerId;const you=amP1?p1:(p2||{});const other=amP1?p2:p1;
+ $("rankedYouName").textContent=(you.name||profile.playerName)+" (YOU)";$("rankedThemName").textContent=other?(other.name||"Challenger"):"WAITING FOR PLAYER";
+ $("rankedYouScore").textContent=Number(you.score)||0;$("rankedThemScore").textContent=other?(Number(other.score)||0):0;
+ $("rankedRoundPill").textContent=`ROUND ${Number(state.roundNo)||0} / ${Number(state.totalRounds)||8}`;
+ if(state.roomCode)$("rankedRoomCode").value=state.roomCode;
+ const panel=$("rankedMatchPanel");panel.classList.remove("hide");
+ const active=state.status==="active";const waiting=state.status==="waiting";const resolved=!!state.roundResolved;
+ if(state.roundNonce&&state.roundNonce!==previousNonce){$("rankedAnswer").value="";$("rankedFeedback").textContent="New server-issued question. Solve it before the deadline.";$("rankedFeedback").className="feedback";rankedLastNonce=state.roundNonce;}
+ $("rankedQuestion").textContent=state.prompt|| (waiting?(state.mode==="random"?"Searching for a challenger…":"Room created. Share the room code with your friend."):"Match finished.");
+ $("rankedTopic").textContent=state.topic|| (waiting?"WAITING ROOM":"RANKED MATCH");
+ $("rankedAnswer").disabled=!active||resolved||rankedSubmitting;
+ $("rankedSubmitBtn").disabled=!active||resolved||rankedSubmitting;
+ if(waiting){
+   rankedStatus(state.mode==="random"?"🎲 Searching on the server queue. Keep this tab open; another player can join at any time.":`🤝 Ranked friend room ${state.roomCode} is waiting. Share the code with your friend.`,true);
+   $("rankedRoundStatus").textContent=state.mode==="random"?"Queue is stored on the server; matching does not depend on Realtime presence.":"Waiting for your friend to join this server-created room.";
+ }
+ if(active){
+   rankedStatus("🔐 Ranked match active — server validates every answer, round token, score and deadline.",true);
+   if(resolved){
+     if(state.roundWinnerId===state.myPlayerId){$("rankedRoundStatus").textContent="Round win! The server awarded you 100 points. Next round begins shortly.";$("rankedFeedback").textContent="SERVER VERIFIED: +100 ranked points!";$("rankedFeedback").className="feedback good"}
+     else if(state.roundWinnerId){$("rankedRoundStatus").textContent="Your opponent won this round. Next round begins shortly.";$("rankedFeedback").textContent="Your opponent was first to submit a correct answer.";$("rankedFeedback").className="feedback bad"}
+     else{$("rankedRoundStatus").textContent="Time expired. No point was awarded for this round; next round begins shortly."}
+   }else{$("rankedRoundStatus").textContent="The database clock is authoritative. Wrong answers can be retried; late answers are rejected."}
+ }
+ if(state.status==="completed"){
+   const verdict=state.winnerId===state.myPlayerId?"YOU WIN 🏆":state.winnerId?"MATCH LOST — REMATCH?":"DRAW 🤝";
+   rankedStatus(`✅ Ranked match complete: ${verdict}. Final scores — ${p1.name}: ${Number(p1.score)||0}, ${p2?.name||"Challenger"}: ${Number(p2?.score)||0}.`,true);
+   $("rankedRoundStatus").textContent="Final result and leaderboard entry were recorded by the server.";$("rankedQuestion").textContent="MATCH COMPLETE · "+verdict;$("rankedFeedback").textContent=verdict;$("rankedFeedback").className="feedback good";
+   rankedStopPolling();rankedRefreshLeaderboard();
+ }
+ if(state.status==="cancelled"){
+   rankedStatus("This ranked room/queue was cancelled. Start a fresh match when ready.");$("rankedRoundStatus").textContent="Cancelled matches do not enter the ranked leaderboard.";rankedStopPolling();
+ }
+ rankedUpdateButtons();rankedUpdateClock();
+}
+async function rankedQueue(){if(!rankedConnected)return;try{$("rankedFindBtn").disabled=true;rankedStatus("Joining the server-side ranked queue…");const data=await rankedApi("queue");rankedSetState(data.state);rankedStartPolling()}catch(e){rankedStatus("Could not join ranked queue: "+String(e.message||e));}finally{rankedUpdateButtons()}}
+async function rankedCreateRoom(){if(!rankedConnected)return;try{$("rankedCreateRoomBtn").disabled=true;rankedStatus("Creating a server-owned friend room…");const data=await rankedApi("create_room");rankedSetState(data.state);rankedStartPolling()}catch(e){rankedStatus("Could not create ranked room: "+String(e.message||e));}finally{rankedUpdateButtons()}}
+async function rankedJoinRoom(){if(!rankedConnected)return;const roomCode=$("rankedRoomCode").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");if(roomCode.length!==6){rankedStatus("Enter your friend's six-character ranked room code.");return}try{$("rankedJoinRoomBtn").disabled=true;rankedStatus("Joining the server-owned room…");const data=await rankedApi("join_room",{roomCode});rankedSetState(data.state);rankedStartPolling()}catch(e){rankedStatus("Could not join room: "+String(e.message||e));}finally{rankedUpdateButtons()}}
+async function rankedLeave(forfeit=false){if(!rankedConnected||!rankedMatchId)return;const active=rankedMatchState?.status==="active";if(active&&!confirm("Leaving an active ranked match counts as a forfeit and gives the win to your opponent. Leave?"))return;try{const data=await rankedApi("leave",{matchId:rankedMatchId});rankedSetState(data.state);rankedStopPolling();}catch(e){rankedStatus("Could not leave ranked match: "+String(e.message||e));}}
+async function rankedCopyInvite(){const code=rankedMatchState?.roomCode;if(!code)return;const url=location.href.split("#")[0]+"#rankedRoom="+encodeURIComponent(code);const text=`Math Battles ranked friend room: ${code}\nOpen the game: ${url}\nBoth players must connect to the same ranked server.`;try{await navigator.clipboard.writeText(text);rankedStatus("Ranked room invite copied. Share it with your friend.",true)}catch(e){rankedStatus("Room code: "+code+" — copy it manually and send the game URL to your friend.",true)}}
+function rankedStartPolling(){rankedStopPolling();rankedPollTimer=setInterval(rankedPollOnce,1200);rankedPollOnce()}
+function rankedStopPolling(){if(rankedPollTimer){clearInterval(rankedPollTimer);rankedPollTimer=null}}
+async function rankedPollOnce(){if(!rankedConnected||!rankedMatchId||rankedPollingInFlight)return;rankedPollingInFlight=true;try{const data=await rankedApi("state",{matchId:rankedMatchId});rankedSetState(data.state)}catch(e){rankedStatus("Ranked connection interrupted: "+String(e.message||e)+". Check your internet connection.")}finally{rankedPollingInFlight=false}}
+function rankedUpdateClock(){
+ const clock=$("rankedClockPill"),fill=$("rankedTimerFill"),state=rankedMatchState;
+ if(!clock||!fill)return;
+ const showInactive=label=>{clock.textContent=label;clock.classList.remove("mp-urgent");fill.style.width="0%";fill.classList.remove("urgent");};
+ if(!state){showInactive("WAITING");return}
+ if(state.status==="waiting"){showInactive("WAITING");return}
+ if(state.status==="completed"){showInactive("FINISHED");return}
+ if(state.status==="cancelled"){showInactive("CANCELLED");return}
+ if(state.status!=="active"){showInactive("WAITING");return}
+ if(state.roundResolved){showInactive("ROUND COMPLETE");return}
+ if(!state.roundDeadline){showInactive("WAITING");return}
+ const deadline=Date.parse(state.roundDeadline);
+ if(!Number.isFinite(deadline)){showInactive("WAITING");return}
+ const ms=Math.max(0,deadline-(Date.now()+rankedServerOffsetMs));
+ const seconds=Math.ceil(ms/1000);
+ clock.textContent=`⏱️ ${seconds}s LEFT`;
+ fill.style.width=(Math.max(0,Math.min(1,ms/50000))*100)+"%";
+ fill.classList.toggle("urgent",seconds<=10);clock.classList.toggle("mp-urgent",seconds<=10);
+ if(seconds<=0){$("rankedAnswer").disabled=true;$("rankedSubmitBtn").disabled=true;$("rankedRoundStatus").textContent="Deadline reached. The server will reject any late submission."}
+}
+async function rankedSubmitAnswer(event){
+ event.preventDefault();if(!rankedConnected||rankedSubmitting||!rankedMatchState||rankedMatchState.status!=="active"||rankedMatchState.roundResolved)return;
+ const answer=$("rankedAnswer").value.trim();if(!answer)return;
+ rankedSubmitting=true;$("rankedAnswer").disabled=true;$("rankedSubmitBtn").disabled=true;$("rankedFeedback").textContent="Sending answer to the server for verification…";$("rankedFeedback").className="feedback";
+ try{
+   const data=await rankedApi("answer",{matchId:rankedMatchState.matchId,roundNo:rankedMatchState.roundNo,roundNonce:rankedMatchState.roundNonce,answer});
+   if(data.state)rankedSetState(data.state);
+   if(data.correct){playSound("hit");$("rankedFeedback").textContent="SERVER VERIFIED! +100 ranked points.";$("rankedFeedback").className="feedback good";$("rankedAnswer").disabled=true;$("rankedSubmitBtn").disabled=true}
+   else if(data.kind==="wrong"||data.kind==="invalid_format"||data.kind==="too_fast"||data.kind==="attempt_limit"){$("rankedFeedback").textContent=data.message||"Not correct — try again.";$("rankedFeedback").className="feedback bad";if(!rankedMatchState?.roundResolved&&rankedMatchState?.status==="active"){$("rankedAnswer").value="";$('rankedAnswer').disabled=false;$('rankedSubmitBtn').disabled=false;$('rankedAnswer').focus()}}
+   else{$("rankedFeedback").textContent=data.message||"That answer was not accepted.";$("rankedFeedback").className="feedback bad";if(data.state)rankedSetState(data.state)}
+ }catch(e){$("rankedFeedback").textContent="Server did not verify this answer: "+String(e.message||e);$("rankedFeedback").className="feedback bad";if(rankedMatchState?.status==="active"&&!rankedMatchState.roundResolved){$("rankedAnswer").disabled=false;$("rankedSubmitBtn").disabled=false}}
+ finally{rankedSubmitting=false;rankedUpdateButtons();if(rankedMatchState?.status==="active"&&!rankedMatchState.roundResolved&&Date.now()+rankedServerOffsetMs<Date.parse(rankedMatchState.roundDeadline||"")){$("rankedAnswer").disabled=false;$("rankedSubmitBtn").disabled=false}}
+}
+
+
+function playSound(kind){if(!soundOn)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);const now=audioCtx.currentTime;const tones={hit:[520,880],miss:[220,140],win:[660,990,1320],start:[330,500],hint:[440,600]};const seq=tones[kind]||tones.hit;o.type=kind==="miss"?"sawtooth":"sine";o.frequency.setValueAtTime(seq[0],now);for(let i=1;i<seq.length;i++)o.frequency.setValueAtTime(seq[i],now+i*.09);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.12,now+.025);g.gain.exponentialRampToValueAtTime(.0001,now+seq.length*.11+.05);o.start(now);o.stop(now+seq.length*.11+.06)}catch(e){}}
+function snapshotProgress(){
+ const safeCurrent=current?{topic:String(current.topic||""),q:String(current.q||""),a:String(current.a??""),hint:String(current.hint||""),damage:Math.max(1,Math.min(100,Number(current.damage)||35))}:null;
+ return {version:3,updatedAt:Date.now(),bossIndex,bossHP,playerHP,score,streak,asked,correct,current:safeCurrent,runActive,usedHint,damagePenalty,recordedThisRun,answerValue:$('answer')?String($('answer').value||"").slice(0,200):"",hintText:$('hintText')?String($('hintText').textContent||"").slice(0,800):"",hintLabel:$('hint')?String($('hint').textContent||"").slice(0,300):"",feedbackText:$('feedback')?String($('feedback').textContent||"").slice(0,500):"",feedbackClass:$('feedback')?String($('feedback').className||"feedback"):"feedback",profile:{...profile,unlocked:[...profile.unlocked]}};
+}
+function saveProgress(showStatus=true){
+ let serialized;try{serialized=JSON.stringify(snapshotProgress())}catch(e){serialized=""}
+ const primary=!!serialized&&safeStoreSet(SAVE_KEY,serialized);
+ const backup=!!serialized&&safeStoreSet(SAVE_BACKUP_KEY,serialized);
+ const ok=primary||backup;
+ if(showStatus){
+  const status=$('saveStatus'),note=$('saveNote');
+  if(ok){if(status)status.textContent="💾 Progress saved";if(note)note.textContent="Autosave is on: moves, hints, coins, and typed answers are saved on this device. Use BACK UP SAVE to keep a portable copy."}
+  else{if(status)status.textContent="⚠️ Save storage blocked";if(note)note.textContent="This browser blocked local saves. Use BACK UP SAVE to download a portable copy before leaving."}
+ }
+ return ok;
+}
+function parseStoredSave(key){try{const raw=safeStoreGet(key);if(!raw)return null;const d=JSON.parse(raw);return d&&typeof d==="object"?d:null}catch(e){return null}}
+function readSave(){
+ // Ignore malformed/newer partial records so a good backup can rescue the run.
+ const candidates=[parseStoredSave(SAVE_KEY),parseStoredSave(SAVE_BACKUP_KEY)].filter(d=>d&&typeof d.runActive==="boolean"&&Number.isInteger(Number(d.bossIndex))&&Number(d.bossIndex)>=0&&Number(d.bossIndex)<=bosses.length);
+ candidates.sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0));
+ return candidates[0]||null;
+}
+function hasResumableSave(d){return !!(d&&d.runActive===true&&Number.isInteger(Number(d.bossIndex))&&Number(d.bossIndex)>=0&&Number(d.bossIndex)<bosses.length&&Number(d.playerHP)>0)}
+function restoreProfileData(raw){
+ if(!raw||typeof raw!=="object")return false;
+ const allowed=new Set(skins.map(s=>s.id));
+ let unlocked=Array.isArray(raw.unlocked)?raw.unlocked.filter(id=>allowed.has(id)):['default'];
+ if(!unlocked.includes('default'))unlocked.unshift('default');
+ const coins=Number(raw.coins);
+ const equipped=String(raw.equipped||'default');
+ profile={coins:Number.isFinite(coins)?Math.max(0,Math.min(1000000000,Math.floor(coins))):0,unlocked:[...new Set(unlocked)],equipped:allowed.has(equipped)&&unlocked.includes(equipped)?equipped:'default',playerName:cleanName(raw.playerName||'StarPilot')};
+ safeStoreSet(PROFILE_KEY,JSON.stringify(profile));renderShop();updateSkinPill();updateProfileBadge();if($('playerName'))$('playerName').value=profile.playerName;return true;
+}
+function removeFreshRunButton(){const fresh=document.getElementById("freshRunBtn");if(fresh)fresh.remove()}
+function restoreRunData(d){
+ if(!hasResumableSave(d))return false;
+ removeFreshRunButton();
+ bossIndex=Math.max(0,Math.min(bosses.length-1,Math.floor(Number(d.bossIndex))));
+ const hp=Number(d.bossHP);bossHP=Number.isFinite(hp)?Math.max(0,Math.min(bosses[bossIndex].hp,hp)):bosses[bossIndex].hp;
+ playerHP=Math.max(1,Math.min(3,Math.floor(Number(d.playerHP)||3)));
+ score=Math.max(0,Math.min(1000000000,Math.floor(Number(d.score)||0)));
+ streak=Math.max(0,Math.floor(Number(d.streak)||0));asked=Math.max(0,Math.floor(Number(d.asked)||0));correct=Math.max(0,Math.min(asked,Math.floor(Number(d.correct)||0)));
+ const c=d.current;
+ current=c&&typeof c==="object"&&typeof c.q==="string"&&typeof c.a!=="undefined"?{topic:String(c.topic||"MIXED EXTREME"),q:c.q.slice(0,800),a:String(c.a).slice(0,100),hint:String(c.hint||"").slice(0,800),damage:Math.max(1,Math.min(100,Number(c.damage)||35))}:null;
+ runActive=true;usedHint=!!d.usedHint;damagePenalty=Math.max(0,Math.min(100,Number(d.damagePenalty)||0));recordedThisRun=!!d.recordedThisRun;
+ update();$('answer').disabled=false;$('attack').disabled=false;$('answer').value=typeof d.answerValue==="string"?d.answerValue.slice(0,200):"";
+ $('hintText').textContent=typeof d.hintText==="string"?d.hintText:"Hints are tactical intel. Use them wisely.";
+ $('hint').textContent=typeof d.hintLabel==="string"?d.hintLabel:"Saved challenge restored. Enter your final answer.";
+ $('feedback').textContent=typeof d.feedbackText==="string"?d.feedbackText:"Welcome back, challenger!";
+ $('feedback').className=(d.feedbackClass==="feedback good"||d.feedbackClass==="feedback bad")?d.feedbackClass:"feedback";
+ $('round').textContent="Challenge "+(asked+1);$('hintBtn').disabled=usedHint;
+ if(bossHP<=0){$('overlay').classList.add("hide");nextBoss();return true}
+ if(current){$('topic').textContent=current.topic;$('question').textContent=current.q}
+ else setQuestion();
+ $('overlay').classList.add("hide");saveProgress(false);playSound("start");return true;
+}
+function resumeRun(){const d=readSave();if(d&&d.profile)restoreProfileData(d.profile);if(!restoreRunData(d)){modal("NO VALID SAVE FOUND","Start a new run, or restore a backup JSON file.","START A NEW RUN",reset)}}
+function downloadSaveBackup(){
+ const payload=snapshotProgress();
+ try{const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="math-boss-battles-save.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('saveStatus').textContent="⬇️ Backup downloaded";$('saveNote').textContent="Backup created. Keep math-boss-battles-save.json somewhere safe so you can restore it if browser data is cleared."}
+ catch(e){$('saveStatus').textContent="⚠️ Backup failed";$('saveNote').textContent="This browser could not download the backup. Try opening the game in a regular browser."}
+}
+async function importSaveBackup(file){
+ if(!file)return;
+ try{
+  if(Number(file.size)>1024*1024)throw new Error("Save file is larger than 1 MB");
+  const data=JSON.parse(await file.text());
+  if(!data||typeof data!=="object")throw new Error("Invalid save file");
+  const canRestoreRun=hasResumableSave(data);
+  const hasProfile=data.profile&&typeof data.profile==="object";
+  if(!canRestoreRun&&!hasProfile)throw new Error("This file does not contain a usable Math Battles save.");
+  if(!confirm("Restore this save? It will replace the progress and cosmetic profile currently on this device."))return;
+  if(hasProfile)restoreProfileData(data.profile);
+  if(canRestoreRun){
+   // Stamp the import as newest so a stale autosave cannot override it.
+   data.updatedAt=Date.now();const text=JSON.stringify(data);safeStoreSet(SAVE_KEY,text);safeStoreSet(SAVE_BACKUP_KEY,text);
+   if(!restoreRunData(data))throw new Error("The saved run could not be restored.");
+   const persisted=saveProgress(false);
+   $('saveStatus').textContent=persisted?"✅ Backup restored":"⚠️ Restored for now";
+   $('saveNote').textContent=persisted?"Your saved run and profile were restored. Autosave is back on.":"Your run is restored for this session, but browser storage is blocked. Download a fresh backup before leaving.";
+  }else{
+   saveProfile();$('saveStatus').textContent="✅ Profile restored";$('saveNote').textContent="Your coins and unlocked skins were restored. This backup has no active run, so start a new run when ready.";
+   modal("PROFILE RESTORED ✨","Your coins and unlocked skins are back. Start a fresh run whenever you're ready.","START NEW RUN",reset);
+  }
+ }catch(e){$('saveStatus').textContent="⚠️ Restore failed";$('saveNote').textContent="That file could not be restored. Choose a Math Battles JSON backup."}
+ finally{$('importSaveFile').value=""}
+}
+function animateBoss(cls){const el=$("bossIcon");el.classList.remove("hit","victory");void el.offsetWidth;el.classList.add(cls)}
+function burst(){for(let i=0;i<24;i++){const e=document.createElement("span");e.className="confetti";e.textContent=["✦","✧","★","✺"][i%4];e.style.left=Math.random()*100+"vw";e.style.top="-20px";e.style.setProperty("--dx",(Math.random()*240-120)+"px");document.body.appendChild(e);setTimeout(()=>e.remove(),1300)}}
+function gcd(a,b){while(b){[a,b]=[b,a%b]}return a}
+function makeQuestion(){
+ const b=bossIndex;
+ if(b===0){const a=3+Math.floor(Math.random()*9),x=2+Math.floor(Math.random()*8),c=Math.floor(Math.random()*15)-7;return{topic:"ALGEBRA · EXTREME",q:`If f(x) = ${a}x ${c<0?"− "+(-c):"+ "+c}, find f(${x}).`,a:String(a*x+c),hint:`Substitute x = ${x}, then multiply before adding or subtracting.`,damage:35}}
+ if(b===1){const n=[84,90,96,108,120,126,144,150,168,180][Math.floor(Math.random()*10)];let count=0;for(let i=1;i<=n;i++)if(n%i===0)count++;return{topic:"NUMBER THEORY · EXTREME",q:`How many positive factors does ${n} have?`,a:String(count),hint:"Prime-factorize n = p^a × q^b × …, then multiply (a+1)(b+1)…",damage:40}}
+ if(b===2){const start=2+Math.floor(Math.random()*8),diff=3+Math.floor(Math.random()*9),n=4+Math.floor(Math.random()*5);const vals=Array.from({length:n-1},(_,i)=>start+i*diff);return{topic:"SEQUENCES · EXTREME",q:`An arithmetic sequence begins ${vals.slice(0,4).join(", ")}, … What is its ${n}th term?`,a:String(start+(n-1)*diff),hint:"Find the common difference, then use aₙ = a₁ + (n − 1)d.",damage:35}}
+ if(b===3){const k=2+Math.floor(Math.random()*8),m=k+1,target=k*m-1;return{topic:"MODULAR ARITHMETIC · EXTREME",q:`Find the smallest positive integer n such that n ≡ ${k-1} (mod ${k}) and n ≡ ${m-1} (mod ${m}).`,a:String(target),hint:`Both conditions say n + 1 is divisible by ${k} and ${m}. Since consecutive integers are coprime, use their product, then subtract 1.`,damage:45}}
+ if(b===5){const total=4+Math.floor(Math.random()*7),part=1+Math.floor(Math.random()*(total-1)),g=gcd(part,total);return{topic:"FRACTIONS & RATIOS · EXTREME",q:`A starship has ${part} blue crystals and ${total-part} gold crystals. What fraction of its crystals are blue? Give a simplified fraction.`,a:`${part/g}/${total/g}`,hint:"Write blue crystals over total crystals, then divide numerator and denominator by their GCD.",damage:50}}
+ if(b===6){const w=4+Math.floor(Math.random()*12),h=3+Math.floor(Math.random()*10);return{topic:"GEOMETRY · EXTREME",q:`A rectangle has length ${w} units and width ${h} units. What is its perimeter?`,a:String(2*(w+h)),hint:"Perimeter = 2 × (length + width).",damage:55}}
+ if(b===7){const sides=[4,5,6,8,10,12],n=sides[Math.floor(Math.random()*sides.length)],f=1+Math.floor(Math.random()*(n-1)),g=gcd(f,n);return{topic:"PROBABILITY · EXTREME",q:`A fair ${n}-sided die has ${f} winning face${f===1?"":"s"}. What is the probability of winning? Give a simplified fraction.`,a:`${f/g}/${n/g}`,hint:"Probability = winning outcomes / total equally likely outcomes. Simplify the fraction.",damage:55}}
+ if(b===8){const power=3+Math.floor(Math.random()*6);return{topic:"EXPONENTS · EXTREME",q:`Evaluate 2^${power} × 2^3. Give the exact integer.`,a:String(2**(power+3)),hint:"When multiplying powers with the same base, add their exponents.",damage:60}}
+ const kind=Math.floor(Math.random()*3);
+ if(kind===0){const n=7+Math.floor(Math.random()*9);return{topic:"MIXED EXTREME",q:`Solve for x: 3(2x − ${n}) = ${3*n+12}.`,a:String(n+2),hint:"Expand the brackets, collect x-terms, and isolate x.",damage:50}}
+ if(kind===1)return{topic:"MIXED EXTREME",q:"A number is divisible by both 12 and 18. What is the smallest positive such number?",a:"36",hint:"The smallest number divisible by both is their least common multiple.",damage:50};
+ const n=5+Math.floor(Math.random()*10);return{topic:"MIXED EXTREME",q:`If 1 + 2 + 3 + … + n = ${n*(n+1)/2}, find n.`,a:String(n),hint:"Use the triangular-number formula n(n + 1) / 2.",damage:50};
+}
+function setQuestion(preserveFeedback=false){current=makeQuestion();usedHint=false;$('topic').textContent=current.topic;$('question').textContent=current.q;$('hint').textContent="Enter your final answer. No multiple choice—boss fight rules.";$('hintText').textContent="Hints are tactical intel. Use them wisely.";$('answer').value="";$('answer').disabled=false;$('attack').disabled=false;if(!preserveFeedback){$('feedback').textContent="";$('feedback').className="feedback"}$('round').textContent="Challenge "+(asked+1);$('hintBtn').disabled=false;$('skipBtn').disabled=false;update();saveProgress();$('answer').focus()}
+function update(){const b=bosses[bossIndex]||bosses[bosses.length-1];$('bossName').textContent=b.name;$('bossDesc').textContent=b.desc;$('bossIcon').textContent=b.icon;$('bossNum').textContent=`BOSS ${Math.min(bossIndex+1,bosses.length)} / ${bosses.length}`;$('bossHPText').textContent=`${Math.max(0,bossHP)} / ${b.hp}`;$('bossHP').style.width=(Math.max(0,bossHP)/b.hp*100)+"%";$('playerHPText').textContent=`${playerHP} / 3`;$('playerHP').style.width=(playerHP/3*100)+"%";$('streak').textContent=streak;$('score').textContent=score;$('accuracy').textContent=asked?Math.round(correct/asked*100)+"%":"—";$('bossAbility').textContent=`⚡ SPECIAL ATTACK: ${b.specialName} — ${b.specialDesc}`;updateSkinPill();$('coinPill').textContent=`🪙 ${profile.coins} coins`}
+function modal(title,text,button,action){$('modalTitle').textContent=title;$('modalText').textContent=text;$('startBtn').textContent=button;$('startBtn').onclick=action;$('overlay').classList.remove("hide")}
+function nextBoss(){animateBoss("victory");playSound("win");burst();addCoins(40+bossIndex*10);bossIndex++;if(bossIndex>=bosses.length){runActive=false;recordRun();saveProgress();modal("UNIVERSE SAVED! 🏆",`You defeated all ten bosses! Final score: ${score}. Accuracy: ${asked?Math.round(correct/asked*100):0}%.`,"PLAY AGAIN",reset);return}bossHP=bosses[bossIndex].hp;update();$('feedback').textContent="BOSS DEFEATED! The next guardian approaches…";$('feedback').className="feedback good";saveProgress();setTimeout(setQuestion,850)}
+function loseLife(message){playerHP--;streak=0;const attackText=specialAttack();$('feedback').textContent=message+" "+attackText;$('feedback').className="feedback bad";update();saveProgress();if(playerHP<=0){runActive=false;saveProgress();recordRun();modal("RUN OVER 💫",`The universe fell this time. Score: ${score}. Accuracy: ${asked?Math.round(correct/asked*100):0}%. Study the hints and try again.`,"RETRY RUN",reset)}else setQuestion(true)}
+$('answerForm').addEventListener('submit',e=>{e.preventDefault();if(!runActive||!current)return;const val=$('answer').value.trim().replace(/,/g,"");if(!val){$('feedback').textContent="Enter an answer first, challenger!";$('feedback').className="feedback bad";return}$('answer').disabled=true;$('attack').disabled=true;asked++;if(answersMatch(val,current.a)){correct++;streak++;animateBoss("hit");playSound("hit");const raw=current.damage+(streak>=3?10:0),penalty=Math.min(damagePenalty,raw-5),dmg=Math.max(5,raw-penalty);damagePenalty=0;bossHP-=dmg;const gained=150+Math.min(streak*5,30);score+=gained;addCoins(10+(usedHint?0:5));$('feedback').textContent=`DIRECT HIT! −${dmg} boss HP. +${gained} points and coins earned!`+(penalty?` Your damage penalty reduced the hit by ${penalty}.`:"");$('feedback').className="feedback good";update();current=null;$('skipBtn').disabled=true;$('hintBtn').disabled=true;saveProgress();if(bossHP<=0)setTimeout(nextBoss,700);else setTimeout(setQuestion,700)}else{playSound("miss");animateBoss("hit");loseLife("MISS! The boss strikes back. Check your arithmetic and keep going.")}});
+$('hintBtn').addEventListener('click',()=>{if(!current||usedHint||!runActive)return;usedHint=true;playSound("hint");score=Math.max(0,score-50);$('hintText').textContent="TACTICAL INTEL: "+current.hint;$('hintBtn').disabled=true;update();saveProgress()});
+$('skipBtn').addEventListener('click',()=>{if(!runActive||!current)return;asked++;$('answer').disabled=true;$('attack').disabled=true;$('skipBtn').disabled=true;loseLife("You retreated. One shield lost—but live to fight on.")});
+function reset(){removeFreshRunButton();bossIndex=0;bossHP=bosses[0].hp;playerHP=3;score=0;streak=0;asked=0;correct=0;runActive=true;current=null;usedHint=false;damagePenalty=0;recordedThisRun=false;$('hintBtn').disabled=false;playSound("start");update();setQuestion();$('overlay').classList.add("hide");saveProgress()}
+$('startBtn').onclick=reset;
+$('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;$('soundBtn').textContent=soundOn?"🔊 SOUND ON":"🔇 SOUND OFF";$('soundBtn').setAttribute("aria-pressed",String(soundOn));if(soundOn)playSound("start")});
+$('saveNowBtn').addEventListener('click',()=>{const ok=saveProgress(true);if(ok){$('saveNowBtn').textContent="✅ SAVED";setTimeout(()=>$('saveNowBtn').textContent="💾 SAVE NOW",1400)}});
+$('exportSaveBtn').addEventListener('click',()=>{saveProgress(false);downloadSaveBackup()});
+$('importSaveBtn').addEventListener('click',()=>$('importSaveFile').click());
+$('importSaveFile').addEventListener('change',e=>importSaveBackup(e.target.files&&e.target.files[0]));
+$('answer').addEventListener('input',()=>saveProgress(false));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveProgress(false)});
+window.addEventListener('pagehide',()=>saveProgress(false));
+window.addEventListener('beforeunload',()=>saveProgress(false));
+setInterval(()=>{if(runActive)saveProgress(false)},5000);
+$('saveNameBtn').addEventListener('click',()=>{profile.playerName=cleanName($('playerName').value);$('playerName').value=profile.playerName;saveProfile();$('nameStatus').textContent=`Gamer tag saved as ${profile.playerName}.`});
+$('connectGlobalBtn').addEventListener('click',connectGlobal);
+$('refreshGlobalBtn').addEventListener('click',()=>refreshGlobalBoard(true));
+$('disconnectGlobalBtn').addEventListener('click',()=>{globalConfig=null;try{localStorage.removeItem(GLOBAL_KEY)}catch(e){}$('supabaseUrl').value="";$('supabaseKey').value="";$('globalStatus').textContent="Disconnected. Local scores still work on this device.";$('globalLeaderboardList').innerHTML="<li>Connect a shared database to load global scores.</li>"});
+$('copySqlBtn').addEventListener('click',async()=>{const text=$('globalSql').value;try{await navigator.clipboard.writeText(text);$('copySqlBtn').textContent="SQL COPIED ✓";setTimeout(()=>$('copySqlBtn').textContent="COPY SETUP SQL",1800)}catch(e){$('globalSql').focus();$('globalSql').select();$('globalStatus').textContent="Select and copy the SQL text, then paste it into your Supabase SQL editor."}});
+$('clearScoresBtn').addEventListener('click',()=>{if(confirm("Clear all local leaderboard scores on this browser? This cannot be undone.")){safeStoreSet(SCORES_KEY,"[]");renderLeaderboard()}});
+
+
+$('rankedConnectBtn').addEventListener('click',rankedConnect);
+$('rankedFindBtn').addEventListener('click',rankedQueue);
+$('rankedStopBtn').addEventListener('click',()=>rankedLeave(false));
+$('rankedCreateRoomBtn').addEventListener('click',rankedCreateRoom);
+$('rankedJoinRoomBtn').addEventListener('click',rankedJoinRoom);
+$('rankedCopyInviteBtn').addEventListener('click',rankedCopyInvite);
+$('rankedForfeitBtn').addEventListener('click',()=>rankedLeave(true));
+$('rankedAnswerForm').addEventListener('submit',rankedSubmitAnswer);
+$('rankedRoomCode').addEventListener('input',()=>{$('rankedRoomCode').value=$('rankedRoomCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)});
+$('rankedQuestion').addEventListener('copy',e=>{e.preventDefault();$('rankedRoundStatus').textContent='Question copying is disabled in this interface. Remember: display restrictions are not a substitute for server-side score validation.'});
+$('rankedQuestion').addEventListener('contextmenu',e=>e.preventDefault());
+$('rankedAnswer').addEventListener('paste',e=>{e.preventDefault();$('rankedFeedback').textContent='Paste is disabled for ranked answers. Type your answer here.';$('rankedFeedback').className='feedback bad'});
+rankedUpdateClock();rankedClockTimer=setInterval(rankedUpdateClock,200);
+
+$('connectPlayBtn').addEventListener('click',connectOnlinePlay);
+$('randomMatchBtn').addEventListener('click',mpFindRandom);
+$('cancelSearchBtn').addEventListener('click',mpCancelSearch);
+$('createRoomBtn').addEventListener('click',mpCreateFriendRoom);
+$('joinRoomBtn').addEventListener('click',mpJoinFriendRoom);
+$('copyInviteBtn').addEventListener('click',mpCopyInvite);
+$('leaveRoomBtn').addEventListener('click',()=>mpLeaveRoom(true));
+$('mpAnswerForm').addEventListener('submit',mpSubmitAnswer);
+// Discourage ordinary copy/paste cheating in multiplayer. These are client-side hurdles, not a substitute for trusted server validation.
+const mpQuestionNode=$("mpQuestion");
+["copy","cut","contextmenu","selectstart","dragstart"].forEach(type=>mpQuestionNode.addEventListener(type,e=>{e.preventDefault();if(type==="copy"||type==="cut"){$("mpRoundStatus").textContent="Question copying is disabled during the duel. Solve it here before the 50-second timer expires."}}));
+mpQuestionNode.setAttribute("draggable","false");
+mpQuestionNode.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&["a","c","x","s","p"].includes(e.key.toLowerCase()))e.preventDefault()});
+$("mpAnswer").addEventListener("paste",e=>{e.preventDefault();$("mpFeedback").textContent="Paste is disabled in competitive answers. Type your answer before the timer runs out.";$("mpFeedback").className="feedback bad"});
+$("mpAnswer").addEventListener("drop",e=>e.preventDefault());
+document.addEventListener("copy",e=>{const sel=window.getSelection();if(mpMatchStarted&&sel&&sel.rangeCount){try{if(sel.getRangeAt(0).intersectsNode(mpQuestionNode))e.preventDefault()}catch(ignore){}}});
+document.addEventListener("keydown",e=>{if(mpMatchStarted&&(e.ctrlKey||e.metaKey)&&["c","x","a"].includes(String(e.key).toLowerCase())){const sel=window.getSelection();try{if(sel&&sel.rangeCount&&sel.getRangeAt(0).intersectsNode(mpQuestionNode))e.preventDefault()}catch(ignore){}}});
+
+$('friendRoomCode').addEventListener('input',()=>{$('friendRoomCode').value=$('friendRoomCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)});
+$('openOnlineBtn').addEventListener('click',()=>{$('overlay').classList.add('hide');$('multiplayerCard').scrollIntoView({behavior:'smooth',block:'start'});if(!mpClient)mpOpenSetup()});
+
+loadProfile();renderShop();renderLeaderboard();$('playerName').value=profile.playerName;updateProfileBadge();update();
+const saved=readSave();if(hasResumableSave(saved)){$('startBtn').textContent="RESUME SAVED RUN ▶";$('startBtn').onclick=resumeRun;$('modalText').textContent="A saved run was found on this device. Resume where you left off, or start a fresh run.";const fresh=document.createElement("button");fresh.id="freshRunBtn";fresh.className="btn secondary";fresh.textContent="NEW RUN";fresh.onclick=reset;$('startBtn').after(fresh)}
+loadGlobalConfig();if(globalConfig)refreshGlobalBoard(false);else refreshGlobalBoard(true);const inviteCode=mpGetRoomCodeFromHash();if(inviteCode){$('friendRoomCode').value=inviteCode;mpSetStatus(`Friend room invite ${inviteCode} detected. Connect online play, then tap JOIN.`)}const rankedInvite=String(location.hash||'').match(/(?:^#|[&#])rankedRoom=([A-Z0-9]{6})/i);if(rankedInvite){$('rankedRoomCode').value=rankedInvite[1].toUpperCase();$('rankedArenaCard').scrollIntoView({behavior:'smooth',block:'start'});rankedStatus(`Ranked friend room ${rankedInvite[1].toUpperCase()} detected. Connect the ranked server, then tap JOIN.`)}mpUpdateButtons();rankedUpdateButtons();
+
+</script></body></html>
